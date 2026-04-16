@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { arcticShift } from "@/lib/arctic-shift/client";
 import { generateWithClaude } from "@/lib/claude/client";
 import {
@@ -192,8 +193,9 @@ export async function POST(request: NextRequest) {
 
     const generationTime = Date.now() - startTime;
 
-    // Ensure subreddit exists in our table (upsert)
-    await supabase.from("subreddits").upsert(
+    // Ensure subreddit exists in our table (use admin client to bypass RLS)
+    const admin = createAdminClient();
+    await admin.from("subreddits").upsert(
       {
         id: subreddit_id,
         display_name: metadata?.display_name || subreddit_id,

@@ -1,25 +1,32 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Settings } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { SettingsView } from "@/components/settings/settings-view";
 
-export default function SettingsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function SettingsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user!.id)
+    .single();
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Settings</h1>
         <p className="mt-1 text-muted-foreground">
           Manage your account and subscription.
         </p>
       </div>
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-          <Settings className="mb-3 h-10 w-10 text-muted-foreground" />
-          <p className="font-medium">Coming Soon</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Account settings, subscription management, and notification
-            preferences — launching in Weekend 4.
-          </p>
-        </CardContent>
-      </Card>
+      <SettingsView
+        profile={profile}
+        userEmail={user!.email!}
+      />
     </div>
   );
 }

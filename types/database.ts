@@ -28,6 +28,7 @@ export interface Profile {
   briefs_limit: number;
   tracked_subreddits_count: number;
   tracked_subreddits_limit: number;
+  digest_enabled: boolean;
   created_at: string;
   updated_at: string;
   last_brief_generated_at: string | null;

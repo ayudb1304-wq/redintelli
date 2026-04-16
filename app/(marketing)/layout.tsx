@@ -15,6 +15,9 @@ export default function MarketingLayout({
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
+              <Link href="/pricing">Pricing</Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
               <Link href="/login">Log in</Link>
             </Button>
             <Button size="sm" asChild>

@@ -118,122 +118,74 @@
 ## Weekend 3: Monitoring + Intelligence Layer
 
 ### Phase 13: RSS Parser + Intent Classification Prompts
-- [ ] RSS feed parser (`lib/rss/parser.ts`) — parse Reddit RSS, extract post IDs
-- [ ] Intent classification prompts (`lib/claude/prompts/intent.ts`) — single + batch classification
-- [ ] Zod schemas for monitoring requests (`lib/validations/monitoring.ts`)
+- [x] RSS feed parser (`lib/rss/parser.ts`) — parse Reddit RSS, extract post IDs
+- [x] Intent classification prompts (`lib/claude/prompts/intent.ts`) — single + batch + `IntentClassification` type
+- [x] Zod schemas for monitoring requests (`lib/validations/monitoring.ts`)
 
 ### Phase 14: Monitoring API Routes
-- [ ] POST `/api/monitoring/feeds` — add tracked subreddit (`app/api/monitoring/feeds/route.ts`)
-- [ ] GET `/api/monitoring/feeds` — list user's tracked subreddits
-- [ ] DELETE `/api/monitoring/feeds/[id]` — remove tracked subreddit (`app/api/monitoring/feeds/[id]/route.ts`)
-- [ ] POST `/api/monitoring/check` — check feeds for new posts, classify intent, store matches (`app/api/monitoring/check/route.ts`)
+- [x] POST `/api/monitoring/feeds` — add tracked subreddit with limit check (`app/api/monitoring/feeds/route.ts`)
+- [x] GET `/api/monitoring/feeds` — list tracked subreddits with unread counts
+- [x] DELETE `/api/monitoring/feeds/[id]` — remove tracked subreddit (`app/api/monitoring/feeds/[id]/route.ts`)
+- [x] POST `/api/monitoring/check` — fetch RSS, filter by keywords, batch classify intent with Claude, store matches (`app/api/monitoring/check/route.ts`)
 
 ### Phase 15: Daily Digest
-- [ ] Digest generation function (`lib/rss/digest.ts`) — fetch unread matches, sort by intent, summarize with Claude
-- [ ] Digest Claude prompt (`lib/claude/prompts/digest.ts`)
-- [ ] POST `/api/monitoring/digest` — generate/preview digest (`app/api/monitoring/digest/route.ts`)
-- [ ] Resend email template for daily digest (`lib/email/digest.ts`)
+- [x] Digest generation function (`lib/rss/digest.ts`) — fetch unread matches, sort by intent, summarize with Claude
+- [x] Digest Claude prompt + types (`lib/claude/prompts/digest.ts`)
+- [x] POST `/api/monitoring/digest` — generate/preview digest, Pro-only (`app/api/monitoring/digest/route.ts`)
+- [x] Resend email template for daily digest (`lib/email/digest.ts`)
 
 ### Phase 16: Monitoring UI
-- [ ] Monitoring page — replace stub (`app/(app)/monitoring/page.tsx`)
-- [ ] `FeedManager` — add/remove tracked subreddits with keywords (`components/monitoring/feed-manager.tsx`)
-- [ ] `AddFeedForm` — subreddit name + keywords input (`components/monitoring/add-feed-form.tsx`)
-- [ ] `MatchedPostsList` — posts with intent score badges, read/dismiss actions (`components/monitoring/matched-posts-list.tsx`)
-- [ ] `DigestPreview` — preview of daily digest (`components/monitoring/digest-preview.tsx`)
+- [x] Monitoring page — replaced stub (`app/(app)/monitoring/page.tsx`)
+- [x] `MonitoringView` — orchestrator with feed/check/digest state (`components/monitoring/monitoring-view.tsx`)
+- [x] `FeedManager` — tracked subreddits with keywords, unread badges, remove (`components/monitoring/feed-manager.tsx`)
+- [x] `AddFeedForm` — subreddit input + keyword chips with Enter/Add (`components/monitoring/add-feed-form.tsx`)
+- [x] `MatchedPostsList` — posts with intent score/label badges, external link, read/dismiss (`components/monitoring/matched-posts-list.tsx`)
+- [x] `DigestPreview` — opportunities, trending topics, competitor mentions, stats (`components/monitoring/digest-preview.tsx`)
 
 ---
 
 ## Weekend 4: Payments + Launch
 
-### Goals
-- Dodo Payments fully integrated
-- Landing page polished
-- Product Hunt ready
+### Phase 17: Dodo Payments Integration
+- [x] Dodo client library (`lib/dodo/client.ts`) — createCheckoutSession, getSubscription, cancelSubscription, createCustomerPortalSession
+- [x] Webhook signature verification (`lib/dodo/webhooks.ts`)
+- [x] Webhook handler route (`app/api/webhooks/dodo/route.ts`) — subscription.created/updated/canceled, payment.failed
+- [x] Checkout API route (`app/api/checkout/route.ts`) — create checkout session for Starter/Pro
 
-### Day 1 (Saturday) - 4-5 hours
+### Phase 18: Settings Page
+- [x] Settings page — replaced stub (`app/(app)/settings/page.tsx`)
+- [x] Profile section — avatar with initials, name, email
+- [x] Subscription section — tier badge, status, period end, usage stats, upgrade buttons
+- [x] Notification preferences — daily digest status (Pro badge or enabled)
+- [x] Sign out button
 
-#### Morning: Dodo Payments Integration (2-3 hours)
-- [ ] Create Dodo products:
-  - Starter: $29/month
-  - Pro: $59/month
-- [ ] Implement Dodo client:
-  ```typescript
-  // lib/dodo/client.ts
-  export async function createCheckoutSession(
-    userId: string,
-    priceId: string,
-    successUrl: string,
-    cancelUrl: string
-  ) {
-    const response = await fetch('https://api.dodopayments.com/v1/checkout', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.DODO_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        customer_email: userEmail,
-        line_items: [{ price: priceId, quantity: 1 }],
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-        metadata: { user_id: userId },
-      }),
-    });
-    return response.json();
-  }
-  ```
-- [ ] Create webhook handler `/api/webhooks/dodo`:
-  ```typescript
-  // Handle events:
-  // - subscription.created
-  // - subscription.updated
-  // - subscription.canceled
-  // - payment.failed
-  ```
-- [ ] Update user profile on subscription changes
-- [ ] Test checkout flow end-to-end
+### Phase 19: Pricing Page
+- [x] Pricing page (`app/(marketing)/pricing/page.tsx`)
+- [x] `PricingCard` component (`components/shared/pricing-card.tsx`) — Free / Starter ($29) / Pro ($59)
+- [x] `PricingSection` reusable component (`components/shared/pricing-section.tsx`)
+- [x] Checkout flow — upgrade button → `/api/checkout` → redirect to Dodo
+- [x] Pricing link added to marketing nav
 
-#### Afternoon: Pricing Page (2 hours)
-- [ ] Create `/pricing` page
-- [ ] Build `PricingCard` components:
-  - Free: 2 briefs/month, 3 tracked subreddits
-  - Starter ($29): 10 briefs/month, 10 tracked subreddits
-  - Pro ($59): Unlimited briefs, 50 tracked subreddits, daily digest
-- [ ] Add upgrade flow from dashboard
-- [ ] Add usage display in settings
-- [ ] Handle subscription management (cancel, update)
+### Phase 20: Landing Page
+- [x] Landing page — replaced placeholder (`app/page.tsx`)
+- [x] Hero — "Understand any Reddit audience in 60 seconds" + GummySearch badge
+- [x] How It Works — 3-step: Discover, Understand, Monitor
+- [x] Sample brief preview — pain points, language patterns, content strategy, intent monitoring
+- [x] Social proof — 1.8B+ posts, 60s generation, 100+ posts per brief
+- [x] Pricing section — reuses `PricingSection` component
+- [x] Final CTA + footer
+- [x] SEO — global metadata in root layout (title, description, keywords, Open Graph, Twitter card, robots)
 
-### Day 2 (Sunday) - 4-5 hours
-
-#### Morning: Landing Page (2-3 hours)
-- [ ] Create compelling landing page:
-  - Hero: "Understand any Reddit audience in 60 seconds"
-  - Pain point: "GummySearch is gone. Here's what's next."
-  - Demo: Interactive brief preview (use sample data)
-  - Social proof: Placeholder for testimonials
-  - Pricing section
-  - CTA: "Generate your first brief free"
-- [ ] Add SEO meta tags
-- [ ] Add OG image for social sharing
-
-#### Afternoon: Polish & Deploy (2 hours)
-- [ ] Test all flows end-to-end
-- [ ] Fix any bugs
-- [ ] Set up error monitoring (Sentry)
-- [ ] Set up analytics (Plausible or PostHog)
-- [ ] Configure production environment variables
-- [ ] Deploy to Vercel
+### Phase 21: Polish + Deploy
+- [x] Typecheck — zero errors
+- [x] Lint — zero warnings (fixed unused imports)
+- [x] Production build — passes clean (26 routes)
+- [x] SEO — robots.txt + sitemap.xml (`app/robots.ts`, `app/sitemap.ts`)
+- [ ] Configure production environment variables in Vercel
+- [ ] Deploy to Vercel production
 - [ ] Set up custom domain
-- [ ] Prepare Product Hunt assets:
-  - [ ] Tagline
-  - [ ] Description
-  - [ ] Screenshots
-  - [ ] Maker comment
-
-### Weekend 4 Deliverable
-- [ ] Full product live and functional
-- [ ] Payments working
-- [ ] Ready for Product Hunt launch
+- [ ] Update Supabase Auth redirect URLs to production domain
+- [ ] Update Dodo webhook URL to production domain
 
 ---
 
