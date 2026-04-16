@@ -39,14 +39,15 @@ export async function POST(request: NextRequest) {
       cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?checkout=canceled`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.checkout_url });
   } catch (error) {
-    console.error("Checkout error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Checkout error:", errorMessage);
     return NextResponse.json(
       {
         error: {
           code: "checkout_failed",
-          message: "Failed to create checkout session",
+          message: errorMessage,
         },
       },
       { status: 500 }

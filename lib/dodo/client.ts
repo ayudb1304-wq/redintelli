@@ -1,4 +1,6 @@
-const DODO_API_URL = "https://api.dodopayments.com/v1";
+const DODO_API_URL = process.env.DODO_API_KEY?.startsWith("sk_test")
+  ? "https://test.dodopayments.com"
+  : "https://live.dodopayments.com";
 
 interface CreateCheckoutOptions {
   userId: string;
@@ -9,31 +11,32 @@ interface CreateCheckoutOptions {
 }
 
 interface CheckoutSession {
-  id: string;
-  url: string;
-  expires_at: string;
+  checkout_url: string;
+  payment_id: string;
 }
 
 export async function createCheckoutSession(
   options: CreateCheckoutOptions
 ): Promise<CheckoutSession> {
-  const response = await fetch(`${DODO_API_URL}/checkout/sessions`, {
+  const response = await fetch(`${DODO_API_URL}/payments`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.DODO_API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      customer_email: options.userEmail,
-      line_items: [
+      payment_link: true,
+      customer: {
+        email: options.userEmail,
+        name: options.userEmail,
+      },
+      product_cart: [
         {
-          product: options.productId,
+          product_id: options.productId,
           quantity: 1,
         },
       ],
-      mode: "subscription",
-      success_url: options.successUrl,
-      cancel_url: options.cancelUrl,
+      return_url: options.successUrl,
       metadata: {
         user_id: options.userId,
       },
@@ -41,11 +44,16 @@ export async function createCheckoutSession(
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to create checkout session");
+    const errorText = await response.text();
+    console.error("Dodo API error:", response.status, errorText);
+    throw new Error(`Dodo checkout failed: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return {
+    checkout_url: data.payment_link || data.checkout_url || data.url,
+    payment_id: data.payment_id || data.id,
+  };
 }
 
 export async function getSubscription(subscriptionId: string) {
@@ -69,35 +77,17 @@ export async function cancelSubscription(subscriptionId: string) {
   const response = await fetch(
     `${DODO_API_URL}/subscriptions/${subscriptionId}`,
     {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${process.env.DODO_API_KEY}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({ status: "cancelled" }),
     }
   );
 
   if (!response.ok) {
     throw new Error("Failed to cancel subscription");
-  }
-
-  return response.json();
-}
-
-export async function createCustomerPortalSession(customerId: string) {
-  const response = await fetch(`${DODO_API_URL}/billing_portal/sessions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.DODO_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      customer: customerId,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to create portal session");
   }
 
   return response.json();
