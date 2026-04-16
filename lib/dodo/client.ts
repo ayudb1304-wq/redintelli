@@ -1,7 +1,8 @@
-const DODO_API_URL =
-  process.env.DODO_TEST_MODE === "true"
+function getDodoUrl() {
+  return process.env.DODO_TEST_MODE === "true"
     ? "https://test.dodopayments.com"
     : "https://live.dodopayments.com";
+}
 
 interface CreateCheckoutOptions {
   userId: string;
@@ -19,7 +20,10 @@ interface CheckoutSession {
 export async function createCheckoutSession(
   options: CreateCheckoutOptions
 ): Promise<CheckoutSession> {
-  const response = await fetch(`${DODO_API_URL}/payments`, {
+  const baseUrl = getDodoUrl();
+  console.log("Dodo checkout:", { baseUrl, testMode: process.env.DODO_TEST_MODE, productId: options.productId });
+
+  const response = await fetch(`${baseUrl}/payments`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.DODO_API_KEY}`,
@@ -63,7 +67,7 @@ export async function createCheckoutSession(
 
 export async function getSubscription(subscriptionId: string) {
   const response = await fetch(
-    `${DODO_API_URL}/subscriptions/${subscriptionId}`,
+    `${getDodoUrl()}/subscriptions/${subscriptionId}`,
     {
       headers: {
         Authorization: `Bearer ${process.env.DODO_API_KEY}`,
@@ -80,7 +84,7 @@ export async function getSubscription(subscriptionId: string) {
 
 export async function cancelSubscription(subscriptionId: string) {
   const response = await fetch(
-    `${DODO_API_URL}/subscriptions/${subscriptionId}`,
+    `${getDodoUrl()}/subscriptions/${subscriptionId}`,
     {
       method: "PATCH",
       headers: {
