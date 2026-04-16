@@ -27,6 +27,13 @@ export async function createCheckoutSession(
     },
     body: JSON.stringify({
       payment_link: true,
+      billing: {
+        city: "N/A",
+        country: "US",
+        state: "N/A",
+        street: "N/A",
+        zipcode: 0,
+      },
       customer: {
         email: options.userEmail,
         name: options.userEmail,
@@ -38,9 +45,6 @@ export async function createCheckoutSession(
         },
       ],
       return_url: options.successUrl,
-      metadata: {
-        user_id: options.userId,
-      },
     }),
   });
 
