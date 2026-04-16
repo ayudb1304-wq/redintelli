@@ -29,6 +29,8 @@ export default async function PricingPage() {
       <PricingSection
         currentTier={currentTier}
         isLoggedIn={!!user}
+        starterProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER}
+        proProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO}
       />
     </div>
   );

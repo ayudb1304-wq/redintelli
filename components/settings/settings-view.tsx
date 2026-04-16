@@ -15,9 +15,11 @@ import type { Profile } from "@/types/database";
 interface SettingsViewProps {
   profile: Profile | null;
   userEmail: string;
+  starterProductId: string;
+  proProductId: string;
 }
 
-export function SettingsView({ profile, userEmail }: SettingsViewProps) {
+export function SettingsView({ profile, userEmail, starterProductId, proProductId }: SettingsViewProps) {
   const router = useRouter();
   const supabase = createClient();
   const [upgrading, setUpgrading] = useState<string | null>(null);
@@ -43,9 +45,7 @@ export function SettingsView({ profile, userEmail }: SettingsViewProps) {
 
   async function handleUpgrade(productEnvKey: string) {
     const productId =
-      productEnvKey === "starter"
-        ? process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER
-        : process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO;
+      productEnvKey === "starter" ? starterProductId : proProductId;
 
     if (!productId) return;
 

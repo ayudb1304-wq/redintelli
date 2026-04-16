@@ -5,6 +5,8 @@ import { PricingCard } from "./pricing-card";
 interface PricingSectionProps {
   currentTier?: string;
   isLoggedIn?: boolean;
+  starterProductId?: string;
+  proProductId?: string;
 }
 
 const plans = [
@@ -47,7 +49,12 @@ const plans = [
   },
 ];
 
-export function PricingSection({ currentTier, isLoggedIn }: PricingSectionProps) {
+export function PricingSection({ currentTier, isLoggedIn, starterProductId, proProductId }: PricingSectionProps) {
+  const productIds: Record<string, string | undefined> = {
+    NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER: starterProductId,
+    NEXT_PUBLIC_DODO_PRODUCT_ID_PRO: proProductId,
+  };
+
   return (
     <div className="mt-12 grid gap-6 sm:grid-cols-3">
       {plans.map((plan) => (
@@ -57,7 +64,7 @@ export function PricingSection({ currentTier, isLoggedIn }: PricingSectionProps)
           price={plan.price}
           productId={
             plan.productIdEnv
-              ? process.env[plan.productIdEnv]
+              ? productIds[plan.productIdEnv]
               : undefined
           }
           features={plan.features}

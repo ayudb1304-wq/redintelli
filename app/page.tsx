@@ -321,7 +321,11 @@ export default function LandingPage() {
           <p className="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
             Start free. Upgrade when you need more.
           </p>
-          <PricingSection isLoggedIn={false} />
+          <PricingSection
+            isLoggedIn={false}
+            starterProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER}
+            proProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO}
+          />
         </div>
       </section>
 

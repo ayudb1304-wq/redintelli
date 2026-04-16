@@ -26,6 +26,8 @@ export default async function SettingsPage() {
       <SettingsView
         profile={profile}
         userEmail={user!.email!}
+        starterProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER ?? ""}
+        proProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO ?? ""}
       />
     </div>
   );
