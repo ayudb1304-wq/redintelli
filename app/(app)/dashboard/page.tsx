@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {

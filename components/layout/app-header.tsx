@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -22,6 +23,7 @@ interface AppHeaderProps {
 export function AppHeader({ userName, userEmail }: AppHeaderProps) {
   const router = useRouter();
   const supabase = createClient();
+  const { isMobile, toggleSidebar } = useSidebar();
 
   const initials = userName
     ? userName
@@ -40,6 +42,19 @@ export function AppHeader({ userName, userEmail }: AppHeaderProps) {
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+      {isMobile && (
+        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
+        </Button>
+      )}
       <div className="flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

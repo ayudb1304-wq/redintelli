@@ -117,94 +117,29 @@
 
 ## Weekend 3: Monitoring + Intelligence Layer
 
-### Goals
-- RSS monitoring working
-- Daily digest generation
-- Intent classification on new posts
+### Phase 13: RSS Parser + Intent Classification Prompts
+- [ ] RSS feed parser (`lib/rss/parser.ts`) — parse Reddit RSS, extract post IDs
+- [ ] Intent classification prompts (`lib/claude/prompts/intent.ts`) — single + batch classification
+- [ ] Zod schemas for monitoring requests (`lib/validations/monitoring.ts`)
 
-### Day 1 (Saturday) - 4-5 hours
+### Phase 14: Monitoring API Routes
+- [ ] POST `/api/monitoring/feeds` — add tracked subreddit (`app/api/monitoring/feeds/route.ts`)
+- [ ] GET `/api/monitoring/feeds` — list user's tracked subreddits
+- [ ] DELETE `/api/monitoring/feeds/[id]` — remove tracked subreddit (`app/api/monitoring/feeds/[id]/route.ts`)
+- [ ] POST `/api/monitoring/check` — check feeds for new posts, classify intent, store matches (`app/api/monitoring/check/route.ts`)
 
-#### Morning: RSS Parsing (2 hours)
-- [ ] Set up RSS parser:
-  ```typescript
-  // lib/rss/parser.ts
-  import Parser from 'rss-parser';
-  
-  export async function parseSubredditFeed(subredditId: string) {
-    const parser = new Parser();
-    const feed = await parser.parseURL(
-      `https://www.reddit.com/r/${subredditId}/new.rss`
-    );
-    return feed.items.map(item => ({
-      id: extractPostId(item.link),
-      title: item.title,
-      link: item.link,
-      pubDate: item.pubDate,
-      // RSS doesn't include full content, just title/link
-    }));
-  }
-  ```
-- [ ] Create tracking management UI
-- [ ] Implement `/api/monitoring/feeds` route
-- [ ] Store tracked subreddits in database
+### Phase 15: Daily Digest
+- [ ] Digest generation function (`lib/rss/digest.ts`) — fetch unread matches, sort by intent, summarize with Claude
+- [ ] Digest Claude prompt (`lib/claude/prompts/digest.ts`)
+- [ ] POST `/api/monitoring/digest` — generate/preview digest (`app/api/monitoring/digest/route.ts`)
+- [ ] Resend email template for daily digest (`lib/email/digest.ts`)
 
-#### Afternoon: Intent Classification (2-3 hours)
-- [ ] Create Claude prompt for intent classification:
-  ```typescript
-  // lib/claude/prompts/intent.ts
-  export const INTENT_CLASSIFICATION_PROMPT = `
-  Classify this Reddit post's buyer intent for a {product_type} product.
-  
-  Post title: {title}
-  Subreddit: r/{subreddit}
-  
-  Classify intent on a scale of 0-100:
-  - 0-20: Just discussion, no buying intent
-  - 21-40: Problem aware (describing a pain point)
-  - 41-60: Solution seeking (asking for recommendations)
-  - 61-80: Comparing options (evaluating specific solutions)
-  - 81-100: Purchase ready (asking where to buy, pricing questions)
-  
-  Also provide:
-  - intent_label: 'no_intent' | 'problem_aware' | 'solution_seeking' | 'comparing' | 'purchase_ready'
-  - reasoning: 1 sentence explanation
-  - keywords_matched: relevant keywords from the post
-  
-  Return as JSON.
-  `;
-  ```
-- [ ] Batch classify new posts (to minimize API calls)
-- [ ] Store matched posts in database
-
-### Day 2 (Sunday) - 4-5 hours
-
-#### Morning: Daily Digest (2-3 hours)
-- [ ] Create digest generation function:
-  ```typescript
-  // lib/rss/digest.ts
-  export async function generateDailyDigest(userId: string) {
-    // Get user's tracked subreddits
-    // Get unread matched posts from last 24h
-    // Sort by intent score
-    // Generate summary with Claude
-    // Return formatted digest
-  }
-  ```
-- [ ] Create digest email template (Resend)
-- [ ] Set up Supabase Edge Function for scheduled execution
-- [ ] Create `/api/monitoring/digest` for manual trigger/preview
-
-#### Afternoon: Monitoring UI (2 hours)
-- [ ] Create `/monitoring` page
-- [ ] Build `FeedManager` component (add/remove tracked subreddits)
-- [ ] Build `DigestPreview` component
-- [ ] Build `MatchedPostsList` component with intent badges
-- [ ] Add notification settings
-
-### Weekend 3 Deliverable
-- [ ] User can track subreddits and set keywords
-- [ ] New posts are classified by intent
-- [ ] Daily digest email ready to send
+### Phase 16: Monitoring UI
+- [ ] Monitoring page — replace stub (`app/(app)/monitoring/page.tsx`)
+- [ ] `FeedManager` — add/remove tracked subreddits with keywords (`components/monitoring/feed-manager.tsx`)
+- [ ] `AddFeedForm` — subreddit name + keywords input (`components/monitoring/add-feed-form.tsx`)
+- [ ] `MatchedPostsList` — posts with intent score badges, read/dismiss actions (`components/monitoring/matched-posts-list.tsx`)
+- [ ] `DigestPreview` — preview of daily digest (`components/monitoring/digest-preview.tsx`)
 
 ---
 

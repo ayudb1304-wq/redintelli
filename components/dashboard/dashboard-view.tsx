@@ -129,24 +129,26 @@ export function DashboardView({
         ) : (
           <div className="space-y-2">
             {recentSessions.map((session) => (
-              <Card key={session.id}>
-                <CardContent className="flex items-center justify-between py-4">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">
-                      {session.product_description.slice(0, 100)}
-                      {session.product_description.length > 100 ? "..." : ""}
-                    </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
-                      {Array.isArray(session.discovered_subreddits)
-                        ? session.discovered_subreddits.length
-                        : 0}{" "}
-                      subreddits found &middot;{" "}
-                      {format(new Date(session.created_at), "MMM d, yyyy")}
-                    </p>
-                  </div>
-                  <ArrowRight className="ml-4 h-4 w-4 shrink-0 text-muted-foreground" />
-                </CardContent>
-              </Card>
+              <Link key={session.id} href={`/discover/${session.id}`}>
+                <Card className="transition-colors hover:bg-muted/50">
+                  <CardContent className="flex items-center justify-between py-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">
+                        {session.product_description.slice(0, 100)}
+                        {session.product_description.length > 100 ? "..." : ""}
+                      </p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {Array.isArray(session.discovered_subreddits)
+                          ? session.discovered_subreddits.length
+                          : 0}{" "}
+                        subreddits found &middot;{" "}
+                        {format(new Date(session.created_at), "MMM d, yyyy")}
+                      </p>
+                    </div>
+                    <ArrowRight className="ml-4 h-4 w-4 shrink-0 text-muted-foreground" />
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
