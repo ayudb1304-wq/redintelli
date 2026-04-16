@@ -5,9 +5,13 @@ import { TIER_LIMITS } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
-  const signature = request.headers.get("X-Dodo-Signature");
 
-  if (!verifyDodoWebhook(body, signature)) {
+  // Standard Webhooks headers
+  const webhookId = request.headers.get("webhook-id");
+  const webhookTimestamp = request.headers.get("webhook-timestamp");
+  const webhookSignature = request.headers.get("webhook-signature");
+
+  if (!verifyDodoWebhook(body, webhookId, webhookTimestamp, webhookSignature)) {
     console.error("Invalid webhook signature");
     return NextResponse.json(
       { error: "Invalid signature" },
@@ -17,37 +21,37 @@ export async function POST(request: NextRequest) {
 
   const event = parseWebhookEvent(body);
   const supabase = createAdminClient();
+  const data = event.data;
 
-  // Log event for debugging
+  // Log event
   await supabase.from("payment_events").insert({
-    dodo_event_id: event.id,
+    dodo_event_id: webhookId || event.timestamp,
     event_type: event.type,
-    payload: event.data,
+    payload: data,
   });
 
   try {
     switch (event.type) {
       case "subscription.active":
-        await handleSubscriptionActive(event.data.object);
+        await handleSubscriptionActive(data);
         break;
       case "subscription.updated":
       case "subscription.plan_changed":
       case "subscription.renewed":
-        await handleSubscriptionUpdated(event.data.object);
+        await handleSubscriptionUpdated(data);
         break;
       case "subscription.cancelled":
       case "subscription.expired":
-        await handleSubscriptionCanceled(event.data.object);
+        await handleSubscriptionCanceled(data);
         break;
       case "subscription.on_hold":
       case "subscription.failed":
       case "payment.failed":
-        await handlePaymentFailed(event.data.object);
+        await handlePaymentFailed(data);
         break;
       case "payment.succeeded":
       case "payment.processing":
       case "payment.cancelled":
-        // Logged but no profile action needed
         break;
       default:
         console.log(`Unhandled event type: ${event.type}`);
@@ -57,7 +61,7 @@ export async function POST(request: NextRequest) {
     await supabase
       .from("payment_events")
       .update({ processed: true, processed_at: new Date().toISOString() })
-      .eq("dodo_event_id", event.id);
+      .eq("dodo_event_id", webhookId || event.timestamp);
 
     return NextResponse.json({ received: true });
   } catch (error) {
@@ -70,7 +74,7 @@ export async function POST(request: NextRequest) {
         error_message:
           error instanceof Error ? error.message : "Unknown error",
       })
-      .eq("dodo_event_id", event.id);
+      .eq("dodo_event_id", webhookId || event.timestamp);
 
     return NextResponse.json(
       { error: "Webhook processing failed" },
@@ -79,22 +83,56 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleSubscriptionActive(subscription: Record<string, unknown>) {
-  const supabase = createAdminClient();
-  const metadata = subscription.metadata as Record<string, string> | undefined;
-  const userId = metadata?.user_id;
+function determineTier(data: Record<string, unknown>): "starter" | "pro" {
+  const productId = data.product_id as string | undefined;
+  if (productId === process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO) return "pro";
+  return "starter";
+}
 
-  if (!userId) {
-    throw new Error("No user_id in subscription metadata");
+async function findUserByMetadataOrSubscription(
+  data: Record<string, unknown>
+): Promise<string | null> {
+  const supabase = createAdminClient();
+
+  // Try metadata first
+  const metadata = data.metadata as Record<string, string> | undefined;
+  if (metadata?.user_id) return metadata.user_id;
+
+  // Try finding by subscription ID
+  const subscriptionId = data.subscription_id as string | undefined;
+  if (subscriptionId) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("dodo_subscription_id", subscriptionId)
+      .single();
+    if (profile) return profile.id;
   }
 
-  const items = subscription.items as Array<{ product: string }> | undefined;
-  const productId = items?.[0]?.product;
-  const tier =
-    productId === process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO
-      ? "pro"
-      : "starter";
+  // Try finding by customer email
+  const customerEmail = data.customer_email as string | undefined;
+  if (customerEmail) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", customerEmail)
+      .single();
+    if (profile) return profile.id;
+  }
 
+  return null;
+}
+
+async function handleSubscriptionActive(data: Record<string, unknown>) {
+  const supabase = createAdminClient();
+  const userId = await findUserByMetadataOrSubscription(data);
+
+  if (!userId) {
+    console.error("Could not find user for subscription.active", data);
+    throw new Error("User not found for subscription");
+  }
+
+  const tier = determineTier(data);
   const limits = TIER_LIMITS[tier];
 
   await supabase
@@ -102,87 +140,51 @@ async function handleSubscriptionActive(subscription: Record<string, unknown>) {
     .update({
       subscription_tier: tier,
       subscription_status: "active",
-      dodo_customer_id: subscription.customer as string,
-      dodo_subscription_id: subscription.id as string,
-      subscription_current_period_end:
-        subscription.current_period_end as string,
+      dodo_customer_id: (data.customer_id as string) || null,
+      dodo_subscription_id: (data.subscription_id as string) || null,
       briefs_limit: limits.briefs,
       tracked_subreddits_limit: limits.subreddits,
     })
     .eq("id", userId);
 }
 
-async function handleSubscriptionUpdated(subscription: Record<string, unknown>) {
+async function handleSubscriptionUpdated(data: Record<string, unknown>) {
   const supabase = createAdminClient();
+  const userId = await findUserByMetadataOrSubscription(data);
+  if (!userId) return;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("dodo_subscription_id", subscription.id as string)
-    .single();
-
-  if (!profile) {
-    throw new Error("Profile not found for subscription");
-  }
-
-  const items = subscription.items as Array<{ product: string }> | undefined;
-  const productId = items?.[0]?.product;
-  const tier =
-    productId === process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO
-      ? "pro"
-      : "starter";
-
+  const tier = determineTier(data);
   const limits = TIER_LIMITS[tier];
 
   await supabase
     .from("profiles")
     .update({
       subscription_tier: tier,
-      subscription_status: subscription.status as string,
-      subscription_current_period_end:
-        subscription.current_period_end as string,
+      subscription_status: (data.status as string) || "active",
       briefs_limit: limits.briefs,
       tracked_subreddits_limit: limits.subreddits,
     })
-    .eq("id", profile.id);
+    .eq("id", userId);
 }
 
-async function handleSubscriptionCanceled(subscription: Record<string, unknown>) {
+async function handleSubscriptionCanceled(data: Record<string, unknown>) {
   const supabase = createAdminClient();
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("dodo_subscription_id", subscription.id as string)
-    .single();
-
-  if (!profile) return;
+  const userId = await findUserByMetadataOrSubscription(data);
+  if (!userId) return;
 
   await supabase
     .from("profiles")
-    .update({
-      subscription_status: "canceled",
-    })
-    .eq("id", profile.id);
+    .update({ subscription_status: "canceled" })
+    .eq("id", userId);
 }
 
-async function handlePaymentFailed(payment: Record<string, unknown>) {
+async function handlePaymentFailed(data: Record<string, unknown>) {
   const supabase = createAdminClient();
-  const subscriptionId = payment.subscription as string | undefined;
-  if (!subscriptionId) return;
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("dodo_subscription_id", subscriptionId)
-    .single();
-
-  if (!profile) return;
+  const userId = await findUserByMetadataOrSubscription(data);
+  if (!userId) return;
 
   await supabase
     .from("profiles")
-    .update({
-      subscription_status: "past_due",
-    })
-    .eq("id", profile.id);
+    .update({ subscription_status: "past_due" })
+    .eq("id", userId);
 }

@@ -2,31 +2,54 @@ import crypto from "crypto";
 
 export function verifyDodoWebhook(
   payload: string,
-  signature: string | null
+  webhookId: string | null,
+  webhookTimestamp: string | null,
+  webhookSignature: string | null
 ): boolean {
-  if (!signature) return false;
+  if (!webhookId || !webhookTimestamp || !webhookSignature) return false;
 
   const secret = process.env.DODO_WEBHOOK_SECRET;
   if (!secret) throw new Error("DODO_WEBHOOK_SECRET not set");
 
-  const expectedSignature = crypto
-    .createHmac("sha256", secret)
-    .update(payload)
-    .digest("hex");
+  // Standard Webhooks: sign "{webhook-id}.{webhook-timestamp}.{body}"
+  const signedContent = `${webhookId}.${webhookTimestamp}.${payload}`;
 
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+  // Secret may be base64 encoded with "whsec_" prefix
+  const secretBytes = secret.startsWith("whsec_")
+    ? Buffer.from(secret.slice(6), "base64")
+    : Buffer.from(secret);
+
+  const expectedSignature = crypto
+    .createHmac("sha256", secretBytes)
+    .update(signedContent)
+    .digest("base64");
+
+  // webhook-signature header can contain multiple signatures: "v1,<sig1> v1,<sig2>"
+  const signatures = webhookSignature.split(" ");
+  for (const sig of signatures) {
+    const sigValue = sig.split(",").slice(1).join(",");
+    try {
+      if (
+        crypto.timingSafeEqual(
+          Buffer.from(expectedSignature),
+          Buffer.from(sigValue)
+        )
+      ) {
+        return true;
+      }
+    } catch {
+      // Length mismatch, try next
+    }
+  }
+
+  return false;
 }
 
 export interface DodoWebhookEvent {
-  id: string;
+  business_id: string;
   type: string;
-  created: number;
-  data: {
-    object: Record<string, unknown>;
-  };
+  timestamp: string;
+  data: Record<string, unknown>;
 }
 
 export function parseWebhookEvent(payload: string): DodoWebhookEvent {
