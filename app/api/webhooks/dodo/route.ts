@@ -23,11 +23,16 @@ export async function POST(request: NextRequest) {
   const supabase = createAdminClient();
   const data = event.data;
 
+  // Extract user_id from payload metadata
+  const metadata = data.metadata as Record<string, string> | undefined;
+  const userId = metadata?.user_id || null;
+
   // Log event
   await supabase.from("payment_events").insert({
     dodo_event_id: webhookId || event.timestamp,
     event_type: event.type,
     payload: data,
+    user_id: userId,
   });
 
   try {

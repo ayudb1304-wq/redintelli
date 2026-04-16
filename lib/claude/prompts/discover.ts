@@ -25,14 +25,14 @@ Return exactly {max_results} subreddits as a JSON array. For each subreddit incl
   "relevance_score": "number 0-100",
   "reasoning": "string (1-2 sentences explaining why this subreddit fits)",
   "audience_overlap": "high | medium | low",
-  "promo_friendly": "boolean (based on typical subreddit culture)",
+  "promo_friendly": "boolean (default false — only true if the subreddit explicitly allows sharing your own projects/tools)",
   "best_angle": "string (suggested approach for this community)"
 }
 
 Rules:
 - Sort by relevance_score descending
 - Include a mix of high-overlap obvious choices and non-obvious niche communities
-- For promo_friendly, consider: subreddit rules, typical post styles, community attitude toward self-promotion
+- For promo_friendly, default to FALSE. Only set to true if the subreddit is specifically designed for sharing projects (e.g. r/sideproject, r/buildinpublic, r/indiehackers) or explicitly permits self-promotion in its rules. Most subreddits — especially large ones like r/entrepreneur, r/marketing, r/startups — have strict anti-promotion rules even if they discuss products. When in doubt, mark false.
 - best_angle should be specific: "Share as a case study" not "Post about your product"
 - You may suggest subreddits not in the sample if you know they exist and are relevant
 
