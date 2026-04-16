@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsView } from "@/components/settings/settings-view";
 
@@ -23,12 +24,9 @@ export default async function SettingsPage() {
           Manage your account and subscription.
         </p>
       </div>
-      <SettingsView
-        profile={profile}
-        userEmail={user!.email!}
-        starterProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER ?? ""}
-        proProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO ?? ""}
-      />
+      <Suspense>
+        <SettingsView profile={profile} userEmail={user!.email!} />
+      </Suspense>
     </div>
   );
 }

@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 interface PricingCardProps {
   name: string;
   price: number;
-  productId: string | undefined;
+  productId: string | null;
   features: string[];
   popular?: boolean;
   currentTier?: string;
@@ -26,27 +28,44 @@ export function PricingCard({
   isLoggedIn,
 }: PricingCardProps) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const tierKey = name.toLowerCase();
   const isCurrentPlan = currentTier === tierKey;
   const isFree = price === 0;
 
+  // Determine if this is a downgrade (current tier is higher)
+  const tierOrder = { free: 0, starter: 1, pro: 2 };
+  const currentOrder = tierOrder[(currentTier as keyof typeof tierOrder) ?? "free"];
+  const thisOrder = tierOrder[tierKey as keyof typeof tierOrder];
+  const isDowngrade = currentOrder > thisOrder;
+
   async function handleCheckout() {
-    if (isFree || !productId) return;
+    if (!productId) return;
+
+    // If not logged in, redirect to signup first
+    if (!isLoggedIn) {
+      router.push(`/signup?plan=${tierKey}`);
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await fetch("/api/checkout", {
+      const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId }),
       });
-      const data = await res.json();
+
+      const data = await response.json();
+
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        throw new Error(data.error || "Failed to create checkout");
       }
-    } catch {
-      // User can retry
+    } catch (error) {
+      console.error("Checkout error:", error);
     } finally {
       setLoading(false);
     }
@@ -54,10 +73,14 @@ export function PricingCard({
 
   function getButtonText() {
     if (isCurrentPlan) return "Current Plan";
-    if (isFree) return isLoggedIn ? "Current Plan" : "Get Started";
-    if (loading) return "Redirecting...";
+    if (isFree && isLoggedIn) return "Current Plan";
+    if (isFree && !isLoggedIn) return "Get Started";
+    if (isDowngrade) return "Downgrade";
+    if (!isLoggedIn) return "Get Started";
     return "Upgrade";
   }
+
+  const isDisabled = isCurrentPlan || (isFree && !!isLoggedIn) || isDowngrade || loading;
 
   return (
     <Card
@@ -89,14 +112,17 @@ export function PricingCard({
         <Button
           className="mt-6 w-full"
           variant={popular ? "default" : "outline"}
-          onClick={isFree ? undefined : handleCheckout}
-          disabled={loading || isCurrentPlan || (isFree && isLoggedIn)}
+          disabled={isDisabled}
+          onClick={!isFree && !isCurrentPlan && !isDowngrade ? handleCheckout : undefined}
           asChild={isFree && !isLoggedIn ? true : undefined}
         >
           {isFree && !isLoggedIn ? (
-            <a href="/signup">{getButtonText()}</a>
+            <Link href="/signup">{getButtonText()}</Link>
           ) : (
-            <span>{getButtonText()}</span>
+            <span>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {getButtonText()}
+            </span>
           )}
         </Button>
       </CardContent>
