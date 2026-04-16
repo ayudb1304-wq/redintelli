@@ -1,6 +1,7 @@
-const DODO_API_URL = process.env.DODO_API_KEY?.startsWith("sk_test")
-  ? "https://test.dodopayments.com"
-  : "https://live.dodopayments.com";
+const DODO_API_URL =
+  process.env.DODO_TEST_MODE === "true"
+    ? "https://test.dodopayments.com"
+    : "https://live.dodopayments.com";
 
 interface CreateCheckoutOptions {
   userId: string;

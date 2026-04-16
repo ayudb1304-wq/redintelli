@@ -27,17 +27,27 @@ export async function POST(request: NextRequest) {
 
   try {
     switch (event.type) {
-      case "subscription.created":
-        await handleSubscriptionCreated(event.data.object);
+      case "subscription.active":
+        await handleSubscriptionActive(event.data.object);
         break;
       case "subscription.updated":
+      case "subscription.plan_changed":
+      case "subscription.renewed":
         await handleSubscriptionUpdated(event.data.object);
         break;
-      case "subscription.canceled":
+      case "subscription.cancelled":
+      case "subscription.expired":
         await handleSubscriptionCanceled(event.data.object);
         break;
+      case "subscription.on_hold":
+      case "subscription.failed":
       case "payment.failed":
         await handlePaymentFailed(event.data.object);
+        break;
+      case "payment.succeeded":
+      case "payment.processing":
+      case "payment.cancelled":
+        // Logged but no profile action needed
         break;
       default:
         console.log(`Unhandled event type: ${event.type}`);
@@ -69,7 +79,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleSubscriptionCreated(subscription: Record<string, unknown>) {
+async function handleSubscriptionActive(subscription: Record<string, unknown>) {
   const supabase = createAdminClient();
   const metadata = subscription.metadata as Record<string, string> | undefined;
   const userId = metadata?.user_id;
