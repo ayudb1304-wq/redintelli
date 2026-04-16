@@ -3,219 +3,115 @@
 ## Pre-Development Setup (2-3 hours)
 
 ### Accounts & Services
-- [ ] Create Supabase project (free tier)
-- [ ] Get Anthropic API key (Claude)
-- [ ] Create Dodo Payments account and get API keys
-- [ ] Create Resend account for transactional emails
-- [ ] Create Vercel account (if not existing)
+- [x] Create Supabase project (free tier)
+- [x] Get Anthropic API key (Claude)
+- [x] Create Dodo Payments account and get API keys
+- [x] Create Resend account for transactional emails
+- [x] Create Vercel account and connect to GitHub repo
 
 ### Local Environment
-- [ ] Clone/setup Next.js + shadcn/ui template
-- [ ] Install additional dependencies:
-  ```bash
-  npm install @supabase/supabase-js @supabase/ssr
-  npm install @anthropic-ai/sdk
-  npm install zod
-  npm install rss-parser
-  npm install date-fns
-  npm install lucide-react
-  ```
-- [ ] Set up environment variables (copy from `.env.example`)
-- [ ] Initialize Supabase CLI: `npx supabase init`
-- [ ] Link to Supabase project: `npx supabase link`
+- [x] Clone/setup Next.js + shadcn/ui template
+- [x] Install Supabase dependencies (`@supabase/supabase-js`, `@supabase/ssr`)
+- [x] Install remaining dependencies (`@anthropic-ai/sdk`, `zod`, `rss-parser`, `date-fns`)
+- [x] Set up environment variables (`.env.local` configured with all keys)
+- [x] Create Supabase client helpers (`lib/supabase/server.ts`, `client.ts`, `middleware.ts`)
+- [x] Create auth middleware (`middleware.ts`)
+- [x] Supabase CLI initialized (`npx supabase init`)
+- [x] Migration file created (`supabase/migrations/001_initial_schema.sql`)
+- [x] Run migration SQL in Supabase SQL Editor (001 + 002)
 
 ---
 
 ## Weekend 1: Foundation + Subreddit Discovery
 
-### Goals
-- Database schema deployed
-- Supabase Auth working
-- Subreddit discovery MVP functional
-- Free tool live to start collecting users
+### Phase 0: shadcn/ui Components
+- [x] Install components: card, input, textarea, label, separator, skeleton, badge, avatar, dropdown-menu, sheet, sidebar, tooltip
+- [x] Add `TooltipProvider` to root layout
 
-### Day 1 (Saturday) - 4-5 hours
+### Phase 1: Auth System
+- [x] Auth callback route (`app/api/auth/callback/route.ts`)
+- [x] Login page with email/password + Google OAuth (`app/(marketing)/login/page.tsx`)
+- [x] Signup page with email/password + Google OAuth (`app/(marketing)/signup/page.tsx`)
+- [x] Login form component (`components/auth/login-form.tsx`)
+- [x] Signup form component (`components/auth/signup-form.tsx`)
+- [x] `useUser` hook (`hooks/use-user.ts`)
+- [x] Route protection in middleware (protected paths + auth page redirects)
+- [x] Configure Supabase Auth URL + redirect URLs
+- [x] Google OAuth provider enabled in Supabase
 
-#### Morning: Database & Auth (2 hours)
-- [ ] Create database tables (run migrations from DATABASE.md)
-- [ ] Set up Supabase Auth with email/password
-- [ ] Create auth callback route `/api/auth/callback`
-- [ ] Set up middleware for protected routes
-- [ ] Test signup/login flow
+### Phase 2: Route Groups + App Layout
+- [x] Marketing layout with top bar (`app/(marketing)/layout.tsx`)
+- [x] App layout with auth check + profile fetch (`app/(app)/layout.tsx`)
+- [x] App shell with SidebarProvider (`components/layout/app-shell.tsx`)
+- [x] Sidebar nav: Dashboard, Discover, Briefs, Monitoring, Settings (`components/layout/app-sidebar.tsx`)
+- [x] Header with user avatar dropdown + sign out (`components/layout/app-header.tsx`)
+- [x] Sidebar collapses to icon mode (not hidden)
+- [x] Placeholder dashboard page (`app/(app)/dashboard/page.tsx`)
 
-#### Afternoon: Subreddit Data (2-3 hours)
-- [ ] Download Arctic Shift subreddit metadata
-  - Source: https://huggingface.co/datasets/open-index/arctic
-  - Focus on: top 100K subreddits by subscribers
-- [ ] Write script to parse and import into Supabase
-- [ ] Verify data imported correctly
-- [ ] Add full-text search index
+### Phase 3: Types + Constants
+- [x] App constants — tier limits, rate limits, API URLs, model ID (`lib/constants.ts`)
+- [x] Arctic Shift types — Post, Comment, Subreddit, search options (`lib/arctic-shift/types.ts`)
+- [x] Database types — all 7 tables + brief content sub-types (`types/database.ts`)
 
-### Day 2 (Sunday) - 4-5 hours
+### Phase 4: Arctic Shift Client
+- [x] `ArcticShiftClient` class (`lib/arctic-shift/client.ts`)
+  - `searchSubreddits`, `getSubredditPosts`, `getSubredditComments`, `getSubredditMetadata`, `getCommentTree`
 
-#### Morning: Discovery API (2-3 hours)
-- [ ] Create `/api/subreddits/discover` route
-- [ ] Implement Claude prompt for subreddit matching:
-  ```typescript
-  // lib/claude/prompts/discover.ts
-  export const DISCOVER_PROMPT = `
-  You are a Reddit expert helping founders find relevant subreddits for their product.
-  
-  Given this product description:
-  {product_description}
-  
-  And this target audience (optional):
-  {target_audience}
-  
-  Search through the provided subreddit data and return the 15-20 most relevant subreddits.
-  
-  For each subreddit, provide:
-  1. subreddit_id (the subreddit name, lowercase)
-  2. relevance_score (0-100)
-  3. reasoning (1-2 sentences on why this subreddit fits)
-  4. audience_overlap (high/medium/low)
-  5. promo_friendly (boolean - based on rules/culture)
-  
-  Return as JSON array. Prioritize:
-  - Subreddits where the target audience actively discusses related problems
-  - Subreddits with history of accepting product/tool recommendations
-  - Smaller niche subreddits over huge general ones (quality over quantity)
-  `;
-  ```
-- [ ] Add input validation with Zod
-- [ ] Handle rate limiting
+### Phase 5: Claude Client + Discovery Prompt
+- [x] `generateWithClaude<T>()` wrapper (`lib/claude/client.ts`)
+- [x] Discovery prompts + `DiscoveredSubreddit` type (`lib/claude/prompts/discover.ts`)
+- [x] In-memory rate limiter (`lib/rate-limit.ts`)
+- [x] Shared Zod schema + `DiscoverRequest` type (`lib/validations/discover.ts`)
 
-#### Afternoon: Discovery UI (2 hours)
-- [ ] Create `/discover` page
-- [ ] Build `DiscoveryForm` component (product description textarea)
-- [ ] Build `SubredditCard` component (display results)
-- [ ] Build `SubredditList` component (sortable results)
-- [ ] Connect to API and display results
-- [ ] Add loading states and error handling
+### Phase 6: Subreddit Discovery Feature
+- [x] Discovery API route (`app/api/subreddits/discover/route.ts`)
+- [x] Discover page (`app/(app)/discover/page.tsx`)
+- [x] Discover view orchestrator (`components/discover/discover-view.tsx`)
+- [x] Discovery form (`components/discover/discovery-form.tsx`)
+- [x] Subreddit result card (`components/discover/subreddit-card.tsx`)
+- [x] Subreddit result list with sort + skeleton loading (`components/discover/subreddit-list.tsx`)
 
-### Weekend 1 Deliverable
-- [ ] Functional subreddit discovery tool
-- [ ] User can sign up, enter product description, get subreddit recommendations
-- [ ] Deploy to Vercel for testing
+### Phase 7: Dashboard
+- [x] Dashboard page with stats + quick actions + recent activity (`app/(app)/dashboard/page.tsx`)
+- [x] Dashboard view component (`components/dashboard/dashboard-view.tsx`)
+
+### Phase 8: Stub Pages
+- [x] Briefs placeholder (`app/(app)/briefs/page.tsx`)
+- [x] Monitoring placeholder (`app/(app)/monitoring/page.tsx`)
+- [x] Settings placeholder (`app/(app)/settings/page.tsx`)
 
 ---
 
 ## Weekend 2: Audience Brief Generation
 
-### Goals
-- Full audience brief generation working
-- Brief display component polished
-- Caching implemented for popular subreddits
+### Phase 9: Brief Generation Prompt + Validation
+- [x] Brief generation prompts (`lib/claude/prompts/brief.ts`)
+- [x] Shared Zod schema for brief requests (`lib/validations/brief.ts`)
 
-### Day 1 (Saturday) - 4-5 hours
+### Phase 10: Brief Generation API
+- [x] POST `/api/briefs/generate` route (`app/api/briefs/generate/route.ts`)
+  - Auth + rate limit + usage limit check
+  - Fetch posts + comments from Arctic Shift
+  - Check for cached brief first
+  - Call Claude with brief generation prompt
+  - Store brief in `audience_briefs` table
+  - Cache popular subreddit briefs (30-day TTL)
+- [x] GET `/api/briefs` route — list user's briefs (`app/api/briefs/route.ts`)
+- [x] GET/DELETE `/api/briefs/[id]` route (`app/api/briefs/[id]/route.ts`)
 
-#### Morning: Arctic Shift Integration (2 hours)
-- [ ] Set up Arctic Shift data fetching
-  - Option A: Download relevant subreddit posts to Supabase
-  - Option B: Query Arctic Shift API on-demand (slower but no storage)
-- [ ] Create helper functions:
-  ```typescript
-  // lib/arctic-shift/client.ts
-  export async function getSubredditPosts(
-    subredditId: string,
-    options: {
-      limit?: number;
-      after?: string; // timestamp
-      before?: string;
-    }
-  ): Promise<RedditPost[]>
-  
-  export async function getSubredditComments(
-    subredditId: string,
-    options: { limit?: number }
-  ): Promise<RedditComment[]>
-  ```
-- [ ] Test data retrieval for sample subreddits
+### Phase 11: Brief Display Components
+- [x] `AudienceBriefView` — main brief layout (`components/briefs/audience-brief-view.tsx`)
+- [x] `PainPointCard` — intensity dots visualization (`components/briefs/pain-point-card.tsx`)
+- [x] `LanguagePattern` — say this / not that with context (`components/briefs/language-pattern.tsx`)
+- [x] `ContentStrategy` — what works / what fails + best times (`components/briefs/content-strategy.tsx`)
+- [x] `MentionedProducts` — product grid with sentiment badges (`components/briefs/mentioned-products.tsx`)
+- [x] `RulesSummary` — promo rules with enforcement shield icons (`components/briefs/rules-summary.tsx`)
 
-#### Afternoon: Brief Generation API (2-3 hours)
-- [ ] Create `/api/briefs/generate` route
-- [ ] Implement Claude prompt for brief generation:
-  ```typescript
-  // lib/claude/prompts/brief.ts
-  export const BRIEF_GENERATION_PROMPT = `
-  You are an expert Reddit analyst. Analyze these posts and comments from r/{subreddit} and generate a comprehensive audience brief.
-  
-  Posts data:
-  {posts_json}
-  
-  Comments data:
-  {comments_json}
-  
-  Generate a structured brief with:
-  
-  1. SNAPSHOT: 2-3 sentence summary of who this audience is, what they care about, and their relationship with promotional content.
-  
-  2. PAIN_POINTS: Identify 4-6 recurring pain points. For each:
-     - title: Clear problem name
-     - intensity: 1-5 (how much does this bother them)
-     - frequency: How often mentioned (daily/weekly/monthly)
-     - quote: A real quote from the data (anonymized)
-  
-  3. LANGUAGE_PATTERNS: 4-6 patterns of how users speak. For each:
-     - user_says: Phrases they actually use
-     - not_say: Corporate/formal equivalent that sounds off
-     - context: Why this matters
-  
-  4. CONTENT_STRATEGY:
-     - what_works: 4-5 content types that get engagement
-     - what_fails: 4-5 content types that get ignored/downvoted
-     - best_times: Best days and hours to post (analyze post timestamps)
-  
-  5. MENTIONED_PRODUCTS: Products/tools frequently mentioned
-     - name, mention frequency, sentiment
-  
-  6. RULES_SUMMARY:
-     - promo_allowed: boolean
-     - key_rules: Main rules affecting promotional content
-     - enforcement_level: strict/moderate/light
-  
-  7. NEXT_STEPS: 4 specific, actionable recommendations for a founder wanting to engage this community
-  
-  Return as valid JSON matching this schema exactly.
-  `;
-  ```
-- [ ] Add brief storage in Supabase
-- [ ] Implement usage limit checking
-
-### Day 2 (Sunday) - 4-5 hours
-
-#### Morning: Brief Display Component (2-3 hours)
-- [ ] Create `AudienceBrief` component (use sample from mockup)
-- [ ] Create sub-components:
-  - `PainPointCard` with intensity visualization
-  - `LanguagePattern` with say/don't say
-  - `ContentStrategy` with what works/fails
-  - `MentionedProducts` grid
-  - `RulesSummary` with color-coded rules
-- [ ] Add collapsible sections
-- [ ] Add copy/download functionality
-
-#### Afternoon: Brief Pages (2 hours)
-- [ ] Create `/briefs` page (list user's briefs)
-- [ ] Create `/briefs/[id]` page (view single brief)
-- [ ] Add "Generate Brief" flow from discovery results
-- [ ] Implement caching for popular subreddits:
-  ```typescript
-  // Check if cached brief exists and is fresh
-  const cachedBrief = await supabase
-    .from('audience_briefs')
-    .select('*')
-    .eq('subreddit_id', subredditId)
-    .eq('is_cached', true)
-    .gt('cache_expires_at', new Date().toISOString())
-    .single();
-  ```
-- [ ] Add loading/generating states
-
-### Weekend 2 Deliverable
-- [ ] User can generate audience brief for any discovered subreddit
-- [ ] Briefs are beautifully displayed with all sections
-- [ ] Popular subreddit briefs are cached to reduce API costs
+### Phase 12: Brief Pages + Discovery Integration
+- [x] Briefs list page (`app/(app)/briefs/page.tsx`) — replaced stub
+- [x] Single brief view page (`app/(app)/briefs/[id]/page.tsx`)
+- [x] "Generate Brief" button on `SubredditCard` with loading + error states
+- [x] Generates brief → redirects to `/briefs/[id]` view
 
 ---
 
