@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { arcticShift } from "@/lib/arctic-shift/client";
 import { generateWithClaude } from "@/lib/claude/client";
 import {
@@ -88,7 +89,12 @@ export async function POST(request: NextRequest) {
 
     const [searchResults, localSubreddits] = await Promise.all([
       arcticShift.searchSubreddits(keywords, { limit: 50 }).catch(() => []),
-      supabase.from("subreddits").select("*").limit(50).then((r) => r.data ?? []),
+      supabase
+        .from("subreddits")
+        .select("*")
+        .textSearch("search_vector", keywords.split(/\s+/).join(" | "), { type: "plain" })
+        .limit(50)
+        .then((r) => r.data ?? []),
     ]);
 
     // Deduplicate and build sample for Claude
@@ -122,6 +128,21 @@ export async function POST(request: NextRequest) {
           subscribers: sub.subscribers || 0,
         });
       }
+    }
+
+    // Refresh local subreddit data from Arctic Shift results (fire and forget)
+    if (searchResults.length > 0) {
+      const admin = createAdminClient();
+      const rows = searchResults.map((sub) => ({
+        id: sub.display_name.toLowerCase(),
+        display_name: sub.display_name,
+        title: sub.title || null,
+        description: (sub.description || "").slice(0, 5000) || null,
+        public_description: (sub.public_description || "").slice(0, 2000) || null,
+        subscribers: sub.subscribers || null,
+        last_synced_at: new Date().toISOString(),
+      }));
+      admin.from("subreddits").upsert(rows, { onConflict: "id" }).then(() => {});
     }
 
     // Build prompt

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, ArrowRight, Search } from "lucide-react";
+import { FileText, ArrowRight, Search, AlertTriangle, Clock } from "lucide-react";
 
 export default async function BriefsPage() {
   const supabase = await createClient();
@@ -69,6 +69,12 @@ export default async function BriefsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {brief.status === "completed" && (() => {
+                      const ageDays = (Date.now() - new Date(brief.created_at).getTime()) / (1000 * 60 * 60 * 24);
+                      if (ageDays > 7) return <AlertTriangle className="h-4 w-4 text-red-500" />;
+                      if (ageDays > 3) return <Clock className="h-4 w-4 text-yellow-500" />;
+                      return null;
+                    })()}
                     <Badge
                       variant={
                         brief.status === "completed" ? "default" : "secondary"

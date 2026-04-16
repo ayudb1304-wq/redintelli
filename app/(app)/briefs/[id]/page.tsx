@@ -39,6 +39,8 @@ export default async function BriefPage({
       <AudienceBriefView
         subredditId={brief.subreddit_id}
         content={brief.content as BriefContent}
+        createdAt={brief.created_at}
+        briefId={brief.id}
       />
     </div>
   );

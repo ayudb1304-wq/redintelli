@@ -27,6 +27,15 @@ export interface ArcticShiftComment {
   distinguished: string | null;
 }
 
+export interface ArcticShiftSubredditMeta {
+  num_posts: number;
+  num_comments: number;
+  earliest_post: number;
+  earliest_comment: number;
+  num_posts_updated_at?: number;
+  num_comments_updated_at?: number;
+}
+
 export interface ArcticShiftSubreddit {
   id: string;
   display_name: string;
@@ -36,6 +45,7 @@ export interface ArcticShiftSubreddit {
   subscribers: number;
   created_utc: number;
   over18: boolean;
+  _meta?: ArcticShiftSubredditMeta;
 }
 
 export interface PostSearchOptions {

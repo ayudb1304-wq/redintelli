@@ -4,19 +4,33 @@ import { LanguagePattern } from "./language-pattern";
 import { ContentStrategy } from "./content-strategy";
 import { MentionedProducts } from "./mentioned-products";
 import { RulesSummary } from "./rules-summary";
+import { BriefFreshnessBanner } from "./brief-freshness-banner";
 import type { BriefContent } from "@/types/database";
 
 interface AudienceBriefViewProps {
   subredditId: string;
   content: BriefContent;
+  createdAt?: string;
+  briefId?: string;
 }
 
 export function AudienceBriefView({
   subredditId,
   content,
+  createdAt,
+  briefId,
 }: AudienceBriefViewProps) {
   return (
     <div className="space-y-8">
+      {/* Freshness Banner */}
+      {createdAt && (
+        <BriefFreshnessBanner
+          createdAt={createdAt}
+          subredditId={subredditId}
+          briefId={briefId}
+        />
+      )}
+
       {/* Snapshot */}
       <section>
         <h2 className="text-lg font-semibold">r/{subredditId}</h2>

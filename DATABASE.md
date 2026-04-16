@@ -444,17 +444,5 @@ npx supabase db push
 
 ## Seed Data
 
-For development, seed popular subreddits:
-
-```sql
--- Seed popular subreddits for development
-INSERT INTO subreddits (id, display_name, title, subscribers, categories, promo_tolerance)
-VALUES
-  ('saas', 'SaaS', 'Software as a Service', 85000, ARRAY['business', 'startups', 'software'], 'medium'),
-  ('entrepreneur', 'Entrepreneur', 'Teknical Entreprenuership', 1200000, ARRAY['business', 'startups'], 'medium'),
-  ('startups', 'startups', 'Teknical Startups', 950000, ARRAY['business', 'startups', 'tech'], 'low'),
-  ('indiehackers', 'indiehackers', 'Indie Hackers', 45000, ARRAY['business', 'startups', 'indie'], 'high'),
-  ('sideproject', 'SideProject', 'Side Project', 120000, ARRAY['business', 'projects', 'indie'], 'high'),
-  ('buildinpublic', 'buildinpublic', 'Building in Public', 127000, ARRAY['business', 'indie', 'marketing'], 'high')
-ON CONFLICT (id) DO NOTHING;
-```
+Top 50 subreddits for founders/indie hackers are seeded via migration `005_seed_subreddits.sql`.
+Run `npx supabase db push` to apply.

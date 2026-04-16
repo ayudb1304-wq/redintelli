@@ -8,6 +8,7 @@ import {
   AUDIENCE_BRIEF_USER_PROMPT,
 } from "@/lib/claude/prompts/brief";
 import { generateBriefRequestSchema } from "@/lib/validations/brief";
+import { parseRules } from "@/lib/arctic-shift/parse";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { RATE_LIMITS, CLAUDE_MODEL } from "@/lib/constants";
 import type { BriefContent } from "@/types/database";
@@ -181,7 +182,9 @@ export async function POST(request: NextRequest) {
       .replace("{comments_json}", JSON.stringify(commentsForPrompt))
       .replace("{subscribers}", String(metadata?.subscribers ?? "unknown"))
       .replace("{description}", metadata?.public_description || metadata?.description || "No description")
-      .replace("{rules_json}", "Not available via API");
+      .replace("{rules_json}", JSON.stringify(
+        metadata?.description ? parseRules(metadata.description) : []
+      ));
 
     const { data: briefContent, tokensUsed } =
       await generateWithClaude<BriefContent>({
@@ -235,7 +238,7 @@ export async function POST(request: NextRequest) {
         status: "completed",
         is_cached: true,
         cache_expires_at: new Date(
-          Date.now() + 30 * 24 * 60 * 60 * 1000
+          Date.now() + 7 * 24 * 60 * 60 * 1000
         ).toISOString(),
       },
       { onConflict: "subreddit_id", ignoreDuplicates: false }
