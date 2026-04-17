@@ -72,7 +72,7 @@ export function MatchedPostsList({
                     variant={getIntentColor(post.intent_score)}
                     className="text-xs"
                   >
-                    {post.intent_score ?? 0} — {getIntentLabel(post.intent_label)}
+                    {post.intent_score ?? 0} · {getIntentLabel(post.intent_label)}
                   </Badge>
                 </div>
                 <p className="text-sm font-medium leading-snug">

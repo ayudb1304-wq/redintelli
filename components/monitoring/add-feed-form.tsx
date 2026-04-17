@@ -103,7 +103,7 @@ export function AddFeedForm({ onSubmit, loading }: AddFeedFormProps) {
           </div>
         )}
         <p className="text-xs text-muted-foreground">
-          {keywords.length}/10 keywords — posts matching any keyword will be tracked
+          {keywords.length}/10 keywords · posts matching any keyword will be tracked
         </p>
       </div>
 

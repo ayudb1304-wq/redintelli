@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FileText } from "lucide-react";
 import { SubredditCard } from "./subreddit-card";
+import { DiscoveryLoading } from "./discovery-loading";
 import type { DiscoveredSubreddit } from "@/lib/claude/prompts/discover";
 
 type SortKey = "relevance" | "overlap";
@@ -20,25 +20,7 @@ export function SubredditList({ subreddits, loading }: SubredditListProps) {
   const [sortBy, setSortBy] = useState<SortKey>("relevance");
 
   if (loading) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-5 w-10" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-14 w-full" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
+    return <DiscoveryLoading />;
   }
 
   if (subreddits.length === 0) {
@@ -54,6 +36,25 @@ export function SubredditList({ subreddits, loading }: SubredditListProps) {
 
   return (
     <div className="space-y-4">
+      {/* Next step banner */}
+      <div className="rounded-xl border-2 border-primary/20 bg-primary/5 p-5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+            <FileText className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="font-semibold">
+              Next step: Generate an audience brief
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pick a subreddit below and hit &quot;Generate Audience Brief&quot;
+              to get pain points, language patterns, content strategy, and
+              posting rules. It takes about 60 seconds.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           {subreddits.length} subreddits found

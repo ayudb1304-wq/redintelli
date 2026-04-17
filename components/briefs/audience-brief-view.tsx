@@ -62,7 +62,7 @@ export function AudienceBriefView({
       <section className="space-y-3">
         <h3 className="text-base font-semibold">Language Patterns</h3>
         <p className="text-sm text-muted-foreground">
-          Speak the community&apos;s language — not marketing speak.
+          Speak the community&apos;s language, not marketing speak.
         </p>
         <div className="space-y-2">
           {content.language_patterns.map((lp, i) => (

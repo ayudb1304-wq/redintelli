@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, FileText } from "lucide-react";
+import { CheckCircle2, XCircle, FileText, ArrowRight } from "lucide-react";
+import { BriefLoading } from "./brief-loading";
 import type { DiscoveredSubreddit } from "@/lib/claude/prompts/discover";
 
 interface SubredditCardProps {
@@ -53,6 +54,19 @@ export function SubredditCard({ subreddit }: SubredditCardProps) {
     } finally {
       setGenerating(false);
     }
+  }
+
+  if (generating) {
+    return (
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="pt-6">
+          <p className="text-center text-sm font-medium">
+            r/{subreddit.subreddit_id}
+          </p>
+          <BriefLoading />
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -106,14 +120,12 @@ export function SubredditCard({ subreddit }: SubredditCardProps) {
         )}
 
         <Button
-          size="sm"
-          variant="outline"
           className="w-full"
           onClick={handleGenerateBrief}
-          disabled={generating}
         >
-          <FileText className="mr-2 h-3.5 w-3.5" />
-          {generating ? "Generating Brief..." : "Generate Brief"}
+          <FileText className="mr-2 h-4 w-4" />
+          Generate Audience Brief
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </CardContent>
     </Card>

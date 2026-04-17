@@ -17,9 +17,17 @@ interface DiscoveryFormProps {
 export function DiscoveryForm({ onSubmit, loading }: DiscoveryFormProps) {
   const [description, setDescription] = useState("");
   const [audience, setAudience] = useState("");
+  const [showHint, setShowHint] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (description.length < 20) {
+      setShowHint(true);
+      return;
+    }
+
+    setShowHint(false);
     onSubmit({
       product_description: description,
       target_audience: audience || undefined,
@@ -37,10 +45,12 @@ export function DiscoveryForm({ onSubmit, loading }: DiscoveryFormProps) {
           id="description"
           placeholder="Describe your product, what problem it solves, and who it's for. The more detail you provide, the better the recommendations..."
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            if (e.target.value.length >= 20) setShowHint(false);
+          }}
           rows={4}
           required
-          minLength={20}
           maxLength={2000}
         />
         <p className="text-xs text-muted-foreground">
@@ -50,6 +60,16 @@ export function DiscoveryForm({ onSubmit, loading }: DiscoveryFormProps) {
           /2000 characters{" "}
           {charCount < 20 && `(${20 - charCount} more needed)`}
         </p>
+
+        {showHint && (
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 dark:border-yellow-800 dark:bg-yellow-950">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              Tell us a bit more about your product! We need at least 20
+              characters to find the right subreddits for you. Think: what does
+              it do, and who is it for?
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -66,7 +86,7 @@ export function DiscoveryForm({ onSubmit, loading }: DiscoveryFormProps) {
         />
       </div>
 
-      <Button type="submit" disabled={loading || !isValid}>
+      <Button type="submit" disabled={loading}>
         {loading ? "Discovering..." : "Discover Subreddits"}
       </Button>
     </form>

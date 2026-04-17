@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PricingSection } from "@/components/shared/pricing-section";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default async function PricingPage() {
   const supabase = await createClient();
@@ -19,6 +22,12 @@ export default async function PricingPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
+      <Button variant="ghost" size="sm" asChild className="mb-6">
+        <Link href="/">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to home
+        </Link>
+      </Button>
       <div className="text-center">
         <h1 className="text-3xl font-bold">Simple, transparent pricing</h1>
         <p className="mt-2 text-muted-foreground">
@@ -29,8 +38,6 @@ export default async function PricingPage() {
       <PricingSection
         currentTier={currentTier}
         isLoggedIn={!!user}
-        starterProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_STARTER}
-        proProductId={process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO}
       />
     </div>
   );
