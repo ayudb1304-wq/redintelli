@@ -1,6 +1,6 @@
-# Dodo Payments — Subscription Implementation Guide
+# Dodo Payments - Subscription Implementation Guide
 
-A complete, end-to-end guide for integrating Dodo Payments subscriptions into your product. Covers checkout, the full webhook lifecycle, plan changes (upgrade/downgrade), and cancellation — including the non-obvious edge cases (on-hold recovery, proration math, payment-failure policy, and cancel-at-period-end vs. immediate cancel).
+A complete, end-to-end guide for integrating Dodo Payments subscriptions into your product. Covers checkout, the full webhook lifecycle, plan changes (upgrade/downgrade), and cancellation - including the non-obvious edge cases (on-hold recovery, proration math, payment-failure policy, and cancel-at-period-end vs. immediate cancel).
 
 > **Audience:** Backend engineers integrating Dodo Payments for the first time, or extending an existing integration to support plan changes and cancellation.
 >
@@ -13,13 +13,13 @@ A complete, end-to-end guide for integrating Dodo Payments subscriptions into yo
 1. [Prerequisites & Setup](#1-prerequisites--setup)
 2. [Architecture Overview](#2-architecture-overview)
 3. [Subscription Lifecycle & States](#3-subscription-lifecycle--states)
-4. [Step 1 — Create a Subscription (Checkout Session)](#4-step-1--create-a-subscription-checkout-session)
-5. [Step 2 — Webhook Handling](#5-step-2--webhook-handling)
-6. [Step 3 — Handle On-Hold Subscriptions](#6-step-3--handle-on-hold-subscriptions)
-7. [Step 4 — Plan Changes (Upgrade & Downgrade)](#7-step-4--plan-changes-upgrade--downgrade)
-8. [Step 5 — Cancellation](#8-step-5--cancellation)
-9. [Step 6 — Database Schema](#9-step-6--database-schema)
-10. [Step 7 — Reactivation & Re-subscription](#10-step-7--reactivation--re-subscription)
+4. [Step 1 - Create a Subscription (Checkout Session)](#4-step-1--create-a-subscription-checkout-session)
+5. [Step 2 - Webhook Handling](#5-step-2--webhook-handling)
+6. [Step 3 - Handle On-Hold Subscriptions](#6-step-3--handle-on-hold-subscriptions)
+7. [Step 4 - Plan Changes (Upgrade & Downgrade)](#7-step-4--plan-changes-upgrade--downgrade)
+8. [Step 5 - Cancellation](#8-step-5--cancellation)
+9. [Step 6 - Database Schema](#9-step-6--database-schema)
+10. [Step 7 - Reactivation & Re-subscription](#10-step-7--reactivation--re-subscription)
 11. [Testing Checklist](#11-testing-checklist)
 12. [Production Best Practices](#12-production-best-practices)
 13. [Reference: API Endpoints & Webhook Events](#13-reference-api-endpoints--webhook-events)
@@ -61,9 +61,9 @@ pip install dodopayments
 
 A production subscription integration has three moving parts:
 
-1. **Checkout creation** — your backend calls Dodo to generate a hosted checkout URL, then redirects the customer there.
-2. **Webhook ingestion** — Dodo calls your endpoint whenever something changes (activation, renewal, failure, cancellation). This is the source of truth for your database.
-3. **Management APIs** — your backend calls Dodo to change plans, update payment methods, or cancel subscriptions on behalf of the customer.
+1. **Checkout creation** - your backend calls Dodo to generate a hosted checkout URL, then redirects the customer there.
+2. **Webhook ingestion** - Dodo calls your endpoint whenever something changes (activation, renewal, failure, cancellation). This is the source of truth for your database.
+3. **Management APIs** - your backend calls Dodo to change plans, update payment methods, or cancel subscriptions on behalf of the customer.
 
 ```
 ┌──────────┐     redirect     ┌─────────────────────┐
@@ -112,7 +112,7 @@ Your database should store the current status and update it **only in response t
 
 ---
 
-## 4. Step 1 — Create a Subscription (Checkout Session)
+## 4. Step 1 - Create a Subscription (Checkout Session)
 
 Use **Checkout Sessions** for the vast majority of cases. Dodo hosts the payment page, handles PCI, 3DS, and regional payment methods, and redirects back to your `return_url` on completion.
 
@@ -167,7 +167,7 @@ def create_subscription_checkout(user_id, product_id, email, name):
 
 ### Critical: use `metadata` to map Dodo objects back to your users
 
-Webhook payloads include the metadata you set at checkout. Always set an internal user ID in metadata — it's the cleanest way to find the right row in your database when a webhook arrives.
+Webhook payloads include the metadata you set at checkout. Always set an internal user ID in metadata - it's the cleanest way to find the right row in your database when a webhook arrives.
 
 ### Response shape
 
@@ -178,11 +178,11 @@ Webhook payloads include the metadata you set at checkout. Always set an interna
 }
 ```
 
-Redirect the customer to `checkout_url`. They'll complete checkout on Dodo's hosted page and return to your `return_url`. **Do not grant access on the return URL** — wait for the `subscription.active` webhook.
+Redirect the customer to `checkout_url`. They'll complete checkout on Dodo's hosted page and return to your `return_url`. **Do not grant access on the return URL** - wait for the `subscription.active` webhook.
 
 ---
 
-## 5. Step 2 — Webhook Handling
+## 5. Step 2 - Webhook Handling
 
 Webhooks are how you learn that a subscription activated, renewed, failed, or changed. Your endpoint must:
 
@@ -343,7 +343,7 @@ app.listen(3000);
 
 > `subscription.updated` overlaps with the specific events. Pick one strategy: either treat `subscription.updated` as your primary sync event and use the others as business-event signals, or ignore `subscription.updated` entirely and use only specific events. Don't do both and re-grant access twice.
 
-### Idempotency — do this, it matters
+### Idempotency - do this, it matters
 
 Dodo will retry webhook deliveries on 5xx responses. Store the `event.id` (or `webhook-id` header) in a dedupe table with a unique constraint:
 
@@ -354,11 +354,11 @@ CREATE TABLE processed_webhook_events (
 );
 ```
 
-Check for the row before processing; insert after processing. If the insert fails on the unique constraint, you've seen it before — skip.
+Check for the row before processing; insert after processing. If the insert fails on the unique constraint, you've seen it before - skip.
 
 ---
 
-## 6. Step 3 — Handle On-Hold Subscriptions
+## 6. Step 3 - Handle On-Hold Subscriptions
 
 A subscription moves to `on_hold` when:
 
@@ -416,11 +416,11 @@ After calling this, watch for `payment.succeeded` followed by `subscription.acti
 
 ---
 
-## 7. Step 4 — Plan Changes (Upgrade & Downgrade)
+## 7. Step 4 - Plan Changes (Upgrade & Downgrade)
 
 Plan changes modify an active subscription's product, quantity, or addons. The three proration modes control how the immediate charge is calculated.
 
-### 7.1 Proration modes — the key decision
+### 7.1 Proration modes - the key decision
 
 Reference scenario: Basic at \$30/mo, upgrade target Pro at \$80/mo, 30-day cycle, change happens on day 16 (15 days remaining).
 
@@ -467,7 +467,7 @@ async function changePlan({ subscriptionId, newProductId, quantity = 1 }) {
 }
 ```
 
-### 7.4 `on_payment_failure` — an important safety knob
+### 7.4 `on_payment_failure` - an important safety knob
 
 When the immediate plan-change charge fails, you have two policies:
 
@@ -487,7 +487,7 @@ await client.subscriptions.changePlan('sub_123', {
   addons: [{ addon_id: 'addon_seats', quantity: 3 }],
 });
 
-// Remove ALL addons — pass empty array
+// Remove ALL addons - pass empty array
 await client.subscriptions.changePlan('sub_123', {
   product_id: 'prod_pro',
   quantity: 1,
@@ -500,16 +500,16 @@ Addons are included in proration calculations.
 
 ### 7.6 Webhooks to expect on a plan change
 
-1. `subscription.plan_changed` — plan fields updated
+1. `subscription.plan_changed` - plan fields updated
 2. `payment.succeeded` (if charge succeeded) or `payment.failed` (if it didn't)
-3. `subscription.active` — confirms the subscription is live on the new plan
+3. `subscription.active` - confirms the subscription is live on the new plan
 4. If payment failed and policy was `apply_change`: `subscription.on_hold` follows
 
 Update entitlements on `subscription.plan_changed` (or `subscription.active` if you prefer a single event).
 
 ---
 
-## 8. Step 5 — Cancellation
+## 8. Step 5 - Cancellation
 
 Cancellation is done via the **Update Subscription** endpoint (`PATCH /subscriptions/{id}`). There are two distinct patterns, and choosing between them is a product decision:
 
@@ -534,7 +534,7 @@ await client.subscriptions.update('sub_123', {
 
 ### 8.2 Cancel immediately
 
-The subscription is cancelled right away. Use this sparingly — typically for refund scenarios, abuse, or compliance actions.
+The subscription is cancelled right away. Use this sparingly - typically for refund scenarios, abuse, or compliance actions.
 
 ```javascript
 await client.subscriptions.update('sub_123', {
@@ -585,7 +585,7 @@ app.post('/api/subscriptions/:id/cancel', async (req, res) => {
         cancel_at_next_billing_date: true,
       });
     }
-    // Don't update your local DB here — let the webhook do it
+    // Don't update your local DB here - let the webhook do it
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -615,7 +615,7 @@ case 'subscription.expired':
 
 ---
 
-## 9. Step 6 — Database Schema
+## 9. Step 6 - Database Schema
 
 A minimal schema that supports everything above:
 
@@ -663,7 +663,7 @@ async function hasActiveAccess(userId) {
   // Active, or scheduled to cancel but still in paid period
   if (sub.status === 'active') return true;
 
-  // Grace period handling for on_hold — business decision
+  // Grace period handling for on_hold - business decision
   if (sub.status === 'on_hold' && sub.expires_at > new Date()) return true;
 
   return false;
@@ -672,7 +672,7 @@ async function hasActiveAccess(userId) {
 
 ---
 
-## 10. Step 7 — Reactivation & Re-subscription
+## 10. Step 7 - Reactivation & Re-subscription
 
 ### After cancel-at-period-end, before expiry
 
@@ -686,7 +686,7 @@ await client.subscriptions.update(subscriptionId, {
 
 ### After full cancellation or expiry
 
-Create a new subscription via a fresh checkout session. The old subscription cannot be "un-cancelled" — it's closed.
+Create a new subscription via a fresh checkout session. The old subscription cannot be "un-cancelled" - it's closed.
 
 ```javascript
 const checkoutUrl = await createSubscriptionCheckout({
@@ -717,19 +717,19 @@ Before going live, verify these scenarios in test mode:
 
 **Plan changes**
 
-- [ ] Upgrade with `prorated_immediately` — charge amount matches preview
-- [ ] Upgrade with `difference_immediately` — full price difference charged
-- [ ] Upgrade with `full_immediately` — billing cycle resets
-- [ ] Downgrade with `prorated_immediately` — credit applied to next renewal
-- [ ] Plan change with failed payment + `prevent_change` — stays on old plan
-- [ ] Plan change with failed payment + `apply_change` — moves to `on_hold`
+- [ ] Upgrade with `prorated_immediately` - charge amount matches preview
+- [ ] Upgrade with `difference_immediately` - full price difference charged
+- [ ] Upgrade with `full_immediately` - billing cycle resets
+- [ ] Downgrade with `prorated_immediately` - credit applied to next renewal
+- [ ] Plan change with failed payment + `prevent_change` - stays on old plan
+- [ ] Plan change with failed payment + `apply_change` - moves to `on_hold`
 - [ ] Adding addons during plan change
 - [ ] Removing all addons (empty array)
 
 **Cancellation**
 
-- [ ] `cancel_at_next_billing_date: true` — access continues until `subscription.expired`
-- [ ] `status: "cancelled"` — immediate cancellation, access revoked
+- [ ] `cancel_at_next_billing_date: true` - access continues until `subscription.expired`
+- [ ] `status: "cancelled"` - immediate cancellation, access revoked
 - [ ] Reverse pending cancellation before period end
 - [ ] Re-subscription after full cancellation (new subscription created)
 
@@ -808,9 +808,9 @@ Before going live, verify these scenarios in test mode:
 
 ## Further reading
 
-- Dodo docs: Subscription Integration Guide — `/developer-resources/subscription-integration-guide`
-- Dodo docs: Subscription Upgrade & Downgrade Guide — `/developer-resources/subscription-upgrade-downgrade`
-- Dodo docs: Checkout Sessions — `/developer-resources/checkout-session`
-- Dodo docs: Webhooks — `/developer-resources/webhooks`
-- Dodo docs: On-Demand Subscriptions — `/developer-resources/ondemand-subscriptions` (for metered/flexible charging)
-- Dodo docs: Customer Portal — `/features/customer-portal` (lets customers self-serve cancellation and plan changes without you building UI)
+- Dodo docs: Subscription Integration Guide - `/developer-resources/subscription-integration-guide`
+- Dodo docs: Subscription Upgrade & Downgrade Guide - `/developer-resources/subscription-upgrade-downgrade`
+- Dodo docs: Checkout Sessions - `/developer-resources/checkout-session`
+- Dodo docs: Webhooks - `/developer-resources/webhooks`
+- Dodo docs: On-Demand Subscriptions - `/developer-resources/ondemand-subscriptions` (for metered/flexible charging)
+- Dodo docs: Customer Portal - `/features/customer-portal` (lets customers self-serve cancellation and plan changes without you building UI)

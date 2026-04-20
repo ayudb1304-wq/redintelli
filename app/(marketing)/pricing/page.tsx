@@ -29,8 +29,14 @@ export default async function PricingPage() {
         </Link>
       </Button>
       <div className="text-center">
-        <h1 className="text-3xl font-bold">Simple, transparent pricing</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="inline-flex items-center gap-2 rounded-full border border-border px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
+          Pricing
+        </p>
+        <h1 className="mt-4 font-serif text-4xl font-normal tracking-tight sm:text-5xl">
+          Start free. <em>Upgrade when it pays for itself.</em>
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground">
           Start free. Upgrade when you need more.
         </p>
       </div>

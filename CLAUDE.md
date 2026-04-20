@@ -4,7 +4,7 @@
 
 A Reddit audience research tool that helps indie hackers and startup founders discover relevant subreddits, understand what those communities care about, and craft messages that resonate. This fills the gap left by GummySearch's November 2025 shutdown.
 
-**Core Value Proposition:** AI-powered audience briefs that tell you what a subreddit's users actually struggle with, desire, and respond to — faster than manually reading thousands of posts.
+**Core Value Proposition:** AI-powered audience briefs that tell you what a subreddit's users actually struggle with, desire, and respond to - faster than manually reading thousands of posts.
 
 ## Tech Stack
 

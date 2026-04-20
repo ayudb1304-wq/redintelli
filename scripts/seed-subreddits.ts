@@ -165,10 +165,10 @@ async function main() {
           stats.posts_per_day !== null ? `${stats.posts_per_day} posts/day` : null,
           stats.avg_comments_per_post !== null ? `${stats.avg_comments_per_post} avg comments` : null,
         ].filter(Boolean);
-        console.log(`  ✓ ${sub.id} — ${parts.join(", ")}`);
+        console.log(`  ✓ ${sub.id} - ${parts.join(", ")}`);
         success++;
       } else {
-        console.log(`  ~ ${sub.id} — no Arctic Shift data, inserted with defaults`);
+        console.log(`  ~ ${sub.id} - no Arctic Shift data, inserted with defaults`);
         fallback++;
       }
 

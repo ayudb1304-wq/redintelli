@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   try {
     if (action === "cancel") {
-      // Cancel at period end — user keeps access until billing cycle ends
+      // Cancel at period end - user keeps access until billing cycle ends
       await dodo.subscriptions.update(profile.dodo_subscription_id, {
         cancel_at_next_billing_date: true,
       });

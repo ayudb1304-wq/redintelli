@@ -126,7 +126,7 @@ Make it look valuable. Include:
 
 **Template A: Pure Value Post**
 ```
-Title: I analyzed 10,000 Reddit posts about [niche] — here's what your potential customers are actually saying
+Title: I analyzed 10,000 Reddit posts about [niche] - here's what your potential customers are actually saying
 
 Body:
 I spent the weekend reading through thousands of Reddit posts and comments about [niche problem].
@@ -147,7 +147,7 @@ What niche should I analyze next?
 
 **Template B: Build-in-Public Angle**
 ```
-Title: I'm building a GummySearch replacement — here's my first audience brief (free)
+Title: I'm building a GummySearch replacement - here's my first audience brief (free)
 
 Body:
 GummySearch shut down last year and left a gap. I'm exploring whether there's demand for AI-powered Reddit audience research.

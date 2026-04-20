@@ -281,7 +281,7 @@ CREATE TABLE payment_events (
 
 ALTER TABLE payment_events ENABLE ROW LEVEL SECURITY;
 
--- No user-facing policies — only service_role key can read/write payment events
+-- No user-facing policies - only service_role key can read/write payment events
 
 CREATE INDEX payment_events_unprocessed_idx ON payment_events(processed) WHERE processed = FALSE;
 

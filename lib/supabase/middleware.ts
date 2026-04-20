@@ -31,14 +31,14 @@ export const updateSession = async (request: NextRequest) => {
     }
   );
 
-  // Refresh the session — this is required to keep the session alive
+  // Refresh the session - this is required to keep the session alive
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 
-  // Protected routes — redirect to login if not authenticated
+  // Protected routes - redirect to login if not authenticated
   const protectedPaths = ["/dashboard", "/discover", "/briefs", "/monitoring", "/settings"];
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
 
@@ -48,7 +48,7 @@ export const updateSession = async (request: NextRequest) => {
     return NextResponse.redirect(url);
   }
 
-  // Auth pages — redirect to dashboard if already authenticated
+  // Auth pages - redirect to dashboard if already authenticated
   const authPaths = ["/login", "/signup"];
   const isAuthPage = authPaths.includes(pathname);
 

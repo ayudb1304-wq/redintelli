@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter } from "next/font/google"
+import { Geist_Mono, Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: {
-    default: "RedIntelli — Reddit Audience Intelligence for Founders",
+    default: "RedIntelli - Reddit Audience Intelligence for Founders",
     template: "%s | RedIntelli",
   },
   description:
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://redintelli.com",
     siteName: "RedIntelli",
-    title: "RedIntelli — Understand Any Reddit Audience in 60 Seconds",
+    title: "RedIntelli - Understand Any Reddit Audience in 60 Seconds",
     description:
       "AI-powered Reddit audience briefs for founders. Discover subreddits, understand pain points, speak the community's language, and find customers.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RedIntelli — Reddit Audience Intelligence",
+    title: "RedIntelli - Reddit Audience Intelligence",
     description:
       "AI-powered audience briefs for any subreddit. The GummySearch alternative for indie hackers.",
   },
@@ -55,6 +55,18 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono-jb",
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,7 +76,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable, instrumentSerif.variable, jetbrainsMono.variable)}
     >
       <body>
         <ThemeProvider>

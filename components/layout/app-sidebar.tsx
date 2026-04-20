@@ -38,9 +38,14 @@ export function AppSidebar() {
       <SidebarHeader className="h-14 flex-row items-center justify-between border-b p-0 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
         <Link
           href="/dashboard"
-          className="text-lg font-semibold group-data-[collapsible=icon]:hidden"
+          className="inline-flex items-center gap-2.5 font-semibold tracking-tight group-data-[collapsible=icon]:hidden"
         >
-          RedIntelli
+          <svg viewBox="0 0 28 28" width={20} height={20}>
+            <circle cx="14" cy="14" r="12" fill="none" stroke="currentColor" strokeWidth="1.25" />
+            <circle cx="14" cy="14" r="4.5" fill="currentColor" />
+            <circle cx="23" cy="8" r="2.2" fill="oklch(0.88 0.2 125)" stroke="currentColor" strokeWidth="1" />
+          </svg>
+          <span>RedIntelli</span>
         </Link>
         <SidebarTrigger />
       </SidebarHeader>

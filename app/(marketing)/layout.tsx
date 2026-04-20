@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
+function LogoSvg({ size = 20 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 28 28" width={size} height={size}>
+      <circle cx="14" cy="14" r="12" fill="none" stroke="currentColor" strokeWidth="1.25" />
+      <circle cx="14" cy="14" r="4.5" fill="currentColor" />
+      <circle cx="23" cy="8" r="2.2" fill="oklch(0.88 0.2 125)" stroke="currentColor" strokeWidth="1" />
+    </svg>
+  );
+}
 
 export default function MarketingLayout({
   children,
@@ -8,74 +17,77 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="min-h-svh">
-      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <Link href="/" className="text-lg font-semibold tracking-tight">
-            RedIntelli
+      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/88 backdrop-blur-md backdrop-saturate-110">
+        <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-8">
+          <Link href="/" className="inline-flex items-center gap-2.5 font-semibold tracking-tight">
+            <LogoSvg />
+            <span>RedIntelli</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
-              <Link href="/alternatives/gummysearch">GummySearch Alternative</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
-              <Link href="/pricing">Pricing</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/signup">Get your first brief free</Link>
-            </Button>
+          <nav className="hidden items-center gap-7 md:flex">
+            <Link href="/alternatives/gummysearch" className="text-sm text-muted-foreground hover:text-foreground">vs GummySearch</Link>
+            <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground">Pricing</Link>
+          </nav>
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="px-2.5 py-2 text-sm text-muted-foreground hover:text-foreground">
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-transform hover:-translate-y-px hover:bg-foreground/90"
+            >
+              Start free<span>&rarr;</span>
+            </Link>
           </div>
         </div>
       </header>
       {children}
-      <footer className="border-t py-12">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 sm:grid-cols-4">
+      <footer className="border-t bg-secondary/50 py-16">
+        <div className="mx-auto max-w-[1200px] px-8">
+          <div className="grid gap-12 md:grid-cols-[1.4fr_2fr]">
             <div>
-              <p className="font-semibold">RedIntelli</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Reddit audience intelligence for founders.
+              <Link href="/" className="inline-flex items-center gap-2.5 text-lg font-semibold">
+                <LogoSvg />
+                <span>RedIntelli</span>
+              </Link>
+              <p className="mt-3 max-w-[30ch] text-sm text-muted-foreground">
+                Reddit audience intelligence for operators who&rsquo;d rather ship than scrape.
               </p>
             </div>
-            <div>
-              <p className="text-sm font-semibold">Product</p>
-              <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
-                <Link href="/pricing" className="hover:text-foreground">Pricing</Link>
-                <Link href="/sample/entrepreneur" className="hover:text-foreground">Sample Brief</Link>
-                <Link href="/signup" className="hover:text-foreground">Sign Up</Link>
-                <Link href="/login" className="hover:text-foreground">Log In</Link>
+            <div className="grid grid-cols-3 gap-6">
+              <div>
+                <p className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">product</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground">Pricing</Link>
+                  <Link href="/sample/entrepreneur" className="text-sm text-muted-foreground hover:text-foreground">Sample Brief</Link>
+                  <Link href="/signup" className="text-sm text-muted-foreground hover:text-foreground">Sign Up</Link>
+                  <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">Log In</Link>
+                </div>
               </div>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Alternatives</p>
-              <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
-                <Link href="/alternatives/gummysearch" className="hover:text-foreground">vs GummySearch</Link>
-                <Link href="/alternatives/redreach" className="hover:text-foreground">vs Redreach</Link>
-                <Link href="/alternatives/brand24" className="hover:text-foreground">vs Brand24</Link>
-                <Link href="/alternatives/syften" className="hover:text-foreground">vs Syften</Link>
-                <Link href="/alternatives/f5bot" className="hover:text-foreground">vs F5Bot</Link>
+              <div>
+                <p className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">alternatives</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/alternatives/gummysearch" className="text-sm text-muted-foreground hover:text-foreground">vs GummySearch</Link>
+                  <Link href="/alternatives/redreach" className="text-sm text-muted-foreground hover:text-foreground">vs Redreach</Link>
+                  <Link href="/alternatives/brand24" className="text-sm text-muted-foreground hover:text-foreground">vs Brand24</Link>
+                  <Link href="/alternatives/syften" className="text-sm text-muted-foreground hover:text-foreground">vs Syften</Link>
+                  <Link href="/alternatives/f5bot" className="text-sm text-muted-foreground hover:text-foreground">vs F5Bot</Link>
+                </div>
               </div>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Subreddits</p>
-              <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
-                <Link href="/subreddits/entrepreneur" className="hover:text-foreground">r/entrepreneur</Link>
-                <Link href="/subreddits/saas" className="hover:text-foreground">r/saas</Link>
-                <Link href="/subreddits/startups" className="hover:text-foreground">r/startups</Link>
-                <Link href="/subreddits/indiehackers" className="hover:text-foreground">r/indiehackers</Link>
-                <Link href="/subreddits/marketing" className="hover:text-foreground">r/marketing</Link>
+              <div>
+                <p className="mb-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">subreddits</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/subreddits/entrepreneur" className="text-sm text-muted-foreground hover:text-foreground">r/entrepreneur</Link>
+                  <Link href="/subreddits/saas" className="text-sm text-muted-foreground hover:text-foreground">r/saas</Link>
+                  <Link href="/subreddits/startups" className="text-sm text-muted-foreground hover:text-foreground">r/startups</Link>
+                  <Link href="/subreddits/indiehackers" className="text-sm text-muted-foreground hover:text-foreground">r/indiehackers</Link>
+                  <Link href="/subreddits/marketing" className="text-sm text-muted-foreground hover:text-foreground">r/marketing</Link>
+                </div>
               </div>
             </div>
           </div>
-          <div className="mt-10 flex flex-col gap-4 border-t pt-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {new Date().getFullYear()} RedIntelli</p>
-            <div className="flex gap-6">
-              <Link href="/" className="hover:text-foreground">Home</Link>
-              <Link href="/pricing" className="hover:text-foreground">Pricing</Link>
-              <Link href="/alternatives/gummysearch" className="hover:text-foreground">Alternatives</Link>
-            </div>
+          <div className="mt-10 flex flex-col gap-4 border-t pt-8 font-mono text-[11px] tracking-wider text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <span>&copy; {new Date().getFullYear()} RedIntelli</span>
+            <span>Made for people who read the whole thread.</span>
           </div>
         </div>
       </footer>

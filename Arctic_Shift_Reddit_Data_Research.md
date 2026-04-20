@@ -1,6 +1,6 @@
 # Arctic Shift Reddit Archive for audience intelligence
 
-**Arctic Shift is the most complete publicly available Reddit archive, containing ~1.8 billion posts and comments from 2005 through February 2026, accessible via a free REST API, Hugging Face Parquet dataset, and per-subreddit torrent downloads.** This makes it the ideal data source for a Reddit Audience Intelligence prototype. The API requires no authentication, supports subreddit/author/date filtering with full-text search, and returns JSON — meaning a working prototype can be built in hours, not weeks. Below is everything needed to build it: complete schemas, working code, API endpoints, and the five best subreddits for validation.
+**Arctic Shift is the most complete publicly available Reddit archive, containing ~1.8 billion posts and comments from 2005 through February 2026, accessible via a free REST API, Hugging Face Parquet dataset, and per-subreddit torrent downloads.** This makes it the ideal data source for a Reddit Audience Intelligence prototype. The API requires no authentication, supports subreddit/author/date filtering with full-text search, and returns JSON - meaning a working prototype can be built in hours, not weeks. Below is everything needed to build it: complete schemas, working code, API endpoints, and the five best subreddits for validation.
 
 ---
 
@@ -10,7 +10,7 @@ Arctic Shift offers three primary access methods, each suited to different use c
 
 ### 1.1 REST API (best for prototyping)
 
-The API lives at `https://arctic-shift.photon-reddit.com` and requires **no authentication**. Rate limits are soft — a few requests per second is fine. Check `X-RateLimit-Remaining` and `X-RateLimit-Reset` response headers. There is no uptime SLA (this is a community project by a single developer).
+The API lives at `https://arctic-shift.photon-reddit.com` and requires **no authentication**. Rate limits are soft - a few requests per second is fine. Check `X-RateLimit-Remaining` and `X-RateLimit-Reset` response headers. There is no uptime SLA (this is a community project by a single developer).
 
 **Core endpoints:**
 
@@ -47,7 +47,7 @@ Data is organized **by date, not by subreddit**. To analyze a specific subreddit
 
 **Per-subreddit dumps** are the most efficient option for focused analysis:
 
-- **Top 40K subreddits (2005–2024):** `https://academictorrents.com/details/1614740ac8c94505e4ecb9d88be8bed7b6afddd4` — separate Zstandard-compressed NDJSON files per subreddit, so you can selectively download only the ones you need
+- **Top 40K subreddits (2005–2024):** `https://academictorrents.com/details/1614740ac8c94505e4ecb9d88be8bed7b6afddd4` - separate Zstandard-compressed NDJSON files per subreddit, so you can selectively download only the ones you need
 - **Monthly dumps** published to Academic Torrents each month (RS_YYYY-MM.zst for submissions, RC_YYYY-MM.zst for comments)
 - **Subreddit metadata dump** with 22 million subreddits, 345K with rules, 323K wiki pages: `https://academictorrents.com/details/5d0bf258a025a5b802572ddc29cde89bf093185c`
 
@@ -205,7 +205,7 @@ After evaluating nine candidate communities across relevance, promo tolerance, a
 
 ### r/SaaS (~400K subscribers) ranks first for audience density
 
-This is the single best subreddit for validation. The community is **densely packed with SaaS founders and operators** discussing growth, retention, pricing, churn, and MRR milestones — exactly the audience a Reddit intelligence tool serves. Activity is high with dozens of posts daily across categories: advice requests, solution requests, pain points, and revenue milestones. Self-promotion is tolerated when framed as sharing progress, and dedicated weekly "Share Your SaaS" feedback threads explicitly welcome it. The subreddit is large enough for statistically meaningful analysis (~400K subscribers) but not so massive that signal drowns in noise. **Dogfooding is natural**: posting an analysis of r/SaaS pain points using your own tool would be genuinely valuable content. Estimated **20–30 posts per day** with strong comment engagement.
+This is the single best subreddit for validation. The community is **densely packed with SaaS founders and operators** discussing growth, retention, pricing, churn, and MRR milestones - exactly the audience a Reddit intelligence tool serves. Activity is high with dozens of posts daily across categories: advice requests, solution requests, pain points, and revenue milestones. Self-promotion is tolerated when framed as sharing progress, and dedicated weekly "Share Your SaaS" feedback threads explicitly welcome it. The subreddit is large enough for statistically meaningful analysis (~400K subscribers) but not so massive that signal drowns in noise. **Dogfooding is natural**: posting an analysis of r/SaaS pain points using your own tool would be genuinely valuable content. Estimated **20–30 posts per day** with strong comment engagement.
 
 ### r/indiehackers (~130–150K subscribers) is the most precisely aligned audience
 
@@ -213,11 +213,11 @@ This community IS the target user base. Every member is an indie hacker, bootstr
 
 ### r/SideProject (~440K subscribers) offers the most permissive promotion rules
 
-The **most promo-friendly subreddit** on this list — its entire purpose is for people to showcase projects and get feedback. Self-promotion is explicitly welcome when seeking feedback, with appropriate flairs. The audience overlaps significantly with indie hackers and founders, though it skews slightly more casual (side projects vs. full-time ventures). This is the safest place to launch and iterate on the tool publicly. Strong engagement on launches, demos, and progress updates. Estimated **15–25 posts per day**.
+The **most promo-friendly subreddit** on this list - its entire purpose is for people to showcase projects and get feedback. Self-promotion is explicitly welcome when seeking feedback, with appropriate flairs. The audience overlaps significantly with indie hackers and founders, though it skews slightly more casual (side projects vs. full-time ventures). This is the safest place to launch and iterate on the tool publicly. Strong engagement on launches, demos, and progress updates. Estimated **15–25 posts per day**.
 
 ### r/microsaas (~50–155K subscribers) provides the tightest product-market fit
 
-A Reddit Audience Intelligence tool IS a micro SaaS product, making this community meta-relevant. Discussions are highly tactical: pricing strategies, growth stories, first-customer acquisition, and product decisions for small SaaS businesses. The community is **more accepting of promotional content** than most, expecting founders to share what they're building. Smaller size means less data volume but a much higher signal-to-noise ratio. Two variants exist (r/microsaas and r/micro_saas) — verify which is more active before committing.
+A Reddit Audience Intelligence tool IS a micro SaaS product, making this community meta-relevant. Discussions are highly tactical: pricing strategies, growth stories, first-customer acquisition, and product decisions for small SaaS businesses. The community is **more accepting of promotional content** than most, expecting founders to share what they're building. Smaller size means less data volume but a much higher signal-to-noise ratio. Two variants exist (r/microsaas and r/micro_saas) - verify which is more active before committing.
 
 ### r/buildinpublic (~40–55K subscribers) is ideal for journey documentation
 
@@ -233,7 +233,7 @@ The entire concept of this subreddit is sharing your building journey publicly, 
 
 ```python
 """
-arctic_shift_client.py — Production-ready client for the Arctic Shift API.
+arctic_shift_client.py - Production-ready client for the Arctic Shift API.
 """
 
 import time
@@ -373,7 +373,7 @@ class ArcticShiftClient:
 
 ```python
 """
-pipeline.py — Fetch subreddit data from Arctic Shift, structure for
+pipeline.py - Fetch subreddit data from Arctic Shift, structure for
 Claude API analysis, and save to local JSON or Supabase.
 """
 
@@ -623,7 +623,7 @@ def analyze_with_claude(
 5. **Content Opportunities**: What questions go unanswered? What content would this audience value?
 6. **Sentiment Overview**: Overall community mood, frustrations, excitement areas.
 
-Be specific — cite post titles and quote comment snippets as evidence.
+Be specific - cite post titles and quote comment snippets as evidence.
 Return your analysis as structured JSON.""",
 
         "competitor_analysis": """Analyze these Reddit posts from r/{subreddit} to identify:
@@ -686,7 +686,7 @@ if __name__ == "__main__":
 
 ```python
 """
-huggingface_loader.py — Load Arctic Shift data from Hugging Face for
+huggingface_loader.py - Load Arctic Shift data from Hugging Face for
 bulk/historical analysis when the API is too slow.
 """
 
@@ -798,16 +798,16 @@ if __name__ == "__main__":
 
 **Scores are snapshots, not live values.** Arctic Shift captures scores approximately 36 hours after posting. Initial captures show score=1 and num_comments=0. For recent data (less than ~36 hours old), these fields are unreliable. Plan your pipeline to fetch data that's at least 2 days old for accurate engagement metrics.
 
-**The API is a one-person community project** with no SLA. For production workloads, use the API for real-time queries but maintain a local copy of target subreddit data (via torrent dumps or Hugging Face Parquet) as a fallback. The download tool at `https://arctic-shift.photon-reddit.com/download-tool` exports JSONL per subreddit — use this to seed your database.
+**The API is a one-person community project** with no SLA. For production workloads, use the API for real-time queries but maintain a local copy of target subreddit data (via torrent dumps or Hugging Face Parquet) as a fallback. The download tool at `https://arctic-shift.photon-reddit.com/download-tool` exports JSONL per subreddit - use this to seed your database.
 
 **The Hugging Face dataset is ~44% ingested** as of April 2026, with many months from 2013–2022 (especially comments) still missing. If you need complete historical data for a specific subreddit, the **per-subreddit torrent** (top 40K subreddits, 2005–2024) is more reliable.
 
-**Deleted and removed content** behaves asymmetrically. Content deleted before Arctic Shift's archival window is gone forever. Content deleted after capture may retain original text — `[removed]` indicates moderator action, `[deleted]` indicates user deletion. Be aware of ethical implications when analyzing content users chose to delete.
+**Deleted and removed content** behaves asymmetrically. Content deleted before Arctic Shift's archival window is gone forever. Content deleted after capture may retain original text - `[removed]` indicates moderator action, `[deleted]` indicates user deletion. Be aware of ethical implications when analyzing content users chose to delete.
 
 **Memory management for large subreddits** is critical. A single month of Reddit comments can exceed 10 GB uncompressed. Always use streaming (HuggingFace `streaming=True`) or DuckDB's lazy evaluation for exploratory work. Only load specific months into memory when you've confirmed the data volume is manageable.
 
 ## Conclusion
 
-The optimal prototype architecture uses the **Arctic Shift REST API as the primary data source** — it requires zero setup, no authentication, and supports all the filtering needed for subreddit-level audience intelligence. The API's date-based pagination, comment tree endpoint, and aggregation capabilities cover every query pattern a prototype needs. For production scale, supplement with **Hugging Face Parquet files** loaded via DuckDB for historical batch analysis, and **per-subreddit torrent dumps** for complete archival data.
+The optimal prototype architecture uses the **Arctic Shift REST API as the primary data source** - it requires zero setup, no authentication, and supports all the filtering needed for subreddit-level audience intelligence. The API's date-based pagination, comment tree endpoint, and aggregation capabilities cover every query pattern a prototype needs. For production scale, supplement with **Hugging Face Parquet files** loaded via DuckDB for historical batch analysis, and **per-subreddit torrent dumps** for complete archival data.
 
-Start validation with **r/SaaS** (highest target audience density and engagement) and **r/indiehackers** (most precisely aligned users), using **r/SideProject** as the launch venue for the tool itself. The pipeline code above — API client, data extraction, Supabase storage, and Claude analysis — provides a working foundation that can go from zero to audience insights in a single afternoon.
+Start validation with **r/SaaS** (highest target audience density and engagement) and **r/indiehackers** (most precisely aligned users), using **r/SideProject** as the launch venue for the tool itself. The pipeline code above - API client, data extraction, Supabase storage, and Claude analysis - provides a working foundation that can go from zero to audience insights in a single afternoon.
