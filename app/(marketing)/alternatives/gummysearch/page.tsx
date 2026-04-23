@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "GummySearch Alternative (2026) | RedIntelli Picks Up Where It Left Off",
+  title: "GummySearch Alternative (2026) | RedIntelli",
   description:
-    "GummySearch shut down in Nov 2025. RedIntelli is the direct successor: pain-point discovery, subreddit monitoring, and AI briefs for indie hackers. Import your GummySearch workflows free.",
+    "GummySearch shut down in November 2025. RedIntelli does the same job: pain points, language patterns, and AI briefs for Reddit audience research. Free migration for existing users.",
 };
 
 const comparisonRows = [
@@ -33,23 +33,23 @@ const comparisonRows = [
 const faqItems = [
   {
     q: "Why did GummySearch shut down?",
-    a: "GummySearch was built by Fed (@foliofed) and grew to $35K MRR with 135,000+ users. It shut down in November 2025 because Fed was unable to reach an agreement with Reddit's commercial API licensing policies. The product stopped accepting new signups November 30, 2025, and existing users retain access until December 1, 2026.",
+    a: "Fed (@foliofed) built GummySearch into a $35K MRR business with 135,000+ users. In November 2025 he announced he was closing it because he couldn't agree on terms with Reddit's commercial API licensing. New signups stopped on November 30, 2025. Existing accounts keep working until December 1, 2026.",
   },
   {
-    q: "Is RedIntelli a GummySearch clone?",
-    a: "No. We focus on the same core problem (understanding Reddit audiences) but take a fundamentally different approach. Instead of a monitoring dashboard, we generate structured audience briefs powered by Claude. Instead of Reddit's commercial API, we use Arctic Shift's open archive. The architecture is designed to avoid the exact failure mode that killed GummySearch.",
+    q: "Is RedIntelli just a GummySearch clone?",
+    a: "Same problem, different approach. GummySearch gave you a monitoring dashboard. RedIntelli generates structured audience briefs with Claude: pain points, language patterns, content strategy, and rules. And we pull data from the Arctic Shift archive instead of Reddit's commercial API, which is the whole reason we can stay open.",
   },
   {
-    q: "Can I import my GummySearch data?",
-    a: "Yes. Email us your export or tell us your saved searches and subreddit lists. We'll rebuild them for free. For the first 500 migrators, the founder does this personally.",
+    q: "Can I bring my GummySearch data across?",
+    a: "Yes. Send your export, or just a list of the subreddits you were tracking, and I'll rebuild your setup for you. Free, and I'll do it personally for the first 500 people.",
   },
   {
-    q: "Will RedIntelli shut down like GummySearch?",
-    a: "RedIntelli is built on Arctic Shift, a public open-source Reddit archive independent of Reddit's commercial API. We don't depend on a Reddit API license, which eliminates the compliance risk that forced GummySearch to close. Our data source is community-maintained and can't be unilaterally revoked.",
+    q: "Could RedIntelli shut down the same way?",
+    a: "Not for the same reason. Arctic Shift is a public, community-maintained Reddit archive. We don't hold a Reddit API license, so there's nothing for Reddit to revoke. Other risks exist (any startup's do), but the specific thing that killed GummySearch isn't one of them.",
   },
   {
-    q: "How does pricing compare to GummySearch?",
-    a: "Our pricing deliberately mirrors GummySearch's structure: Free ($0, 2 briefs/month), Starter ($29/mo), and Pro ($59/mo). If you're coming from GummySearch, use code GUMMYFRIEND for 50% off your first 3 months.",
+    q: "How does pricing compare?",
+    a: "We matched GummySearch on purpose: Free ($0, 2 briefs a month), Starter ($29/mo), Pro ($59/mo). If you're coming from GummySearch, use code GUMMYFRIEND for 50% off your first 3 months.",
   },
 ];
 
@@ -71,14 +71,14 @@ export default function GummySearchAlternativePage() {
           <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
             GummySearch shut down.
             <br />
-            <span className="text-primary">RedIntelli picks up where it left off.</span>
+            <span className="text-primary">RedIntelli does the same job.</span>
           </h1>
           <p className="mt-8 text-lg leading-relaxed text-muted-foreground">
-            Fed built something great. GummySearch trained an entire generation
-            of founders to use Reddit for audience research. When it shut down
-            in November 2025, 135,000+ users lost their workflows overnight.
-            RedIntelli is built from the ground up to solve the same problem
-            with an architecture that won&apos;t face the same fate.
+            GummySearch closed in November 2025 after Fed couldn&apos;t agree on
+            terms with Reddit&apos;s new API licensing. 135,000+ founders lost
+            the tool they used for Reddit research. RedIntelli is what I built
+            to replace it. Different data source, so we shouldn&apos;t hit the
+            same wall.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
@@ -102,7 +102,7 @@ export default function GummySearchAlternativePage() {
               Honest comparison
             </p>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-              What you&apos;ll miss from GummySearch. And how we handle it.
+              What you get, compared to what you had.
             </h2>
           </div>
 
@@ -155,37 +155,36 @@ export default function GummySearchAlternativePage() {
                 The technical difference
               </p>
               <h2 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">
-                Why GummySearch died and why RedIntelli won&apos;t.
+                Why GummySearch closed, and why we&apos;re on firmer ground.
               </h2>
             </div>
             <div className="lg:col-span-3 lg:pl-8">
               <div className="space-y-8">
                 <div>
-                  <h3 className="font-semibold">GummySearch&apos;s dependency</h3>
+                  <h3 className="font-semibold">What happened to GummySearch</h3>
                   <p className="mt-2 leading-relaxed text-muted-foreground">
-                    GummySearch relied on Reddit&apos;s commercial API. When
-                    Reddit changed their licensing terms in 2023-2025, the
-                    compliance costs became unworkable for a bootstrapped tool.
-                    Fed couldn&apos;t reach an agreement, so he shut down.
+                    It ran on Reddit&apos;s commercial API. When Reddit rewrote
+                    their licensing terms between 2023 and 2025, the costs
+                    stopped making sense for a bootstrapped tool. Fed
+                    couldn&apos;t reach a deal with Reddit, so he shut it down.
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-semibold">RedIntelli&apos;s architecture</h3>
+                  <h3 className="font-semibold">What we use instead</h3>
                   <p className="mt-2 leading-relaxed text-muted-foreground">
-                    RedIntelli is built on Arctic Shift, a public open-source
-                    Reddit archive hosted on Hugging Face. It&apos;s
-                    community-maintained and independent of Reddit&apos;s
-                    commercial API. We pair this with Claude for AI analysis.
-                    Zero commercial API dependency means zero platform risk.
+                    RedIntelli runs on Arctic Shift, a public Reddit archive
+                    hosted on Hugging Face. It&apos;s community-maintained and
+                    doesn&apos;t touch Reddit&apos;s commercial API. Claude
+                    handles the analysis on top. No API license to lose.
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold">Research-only by design</h3>
                   <p className="mt-2 leading-relaxed text-muted-foreground">
-                    We never post or comment on Reddit for you. We never access
-                    your Reddit account. This isn&apos;t just a policy, it&apos;s
-                    a technical constraint. Our tool literally cannot interact
-                    with Reddit on your behalf.
+                    We don&apos;t post, comment, or log into Reddit for you. We
+                    never ask for your Reddit credentials. The tool has no
+                    write access to Reddit at all, so even if we wanted to, we
+                    couldn&apos;t.
                   </p>
                 </div>
               </div>
@@ -203,13 +202,13 @@ export default function GummySearchAlternativePage() {
                 5-minute migration guide
               </p>
               <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-                Move from GummySearch to RedIntelli.
+                Move your setup over.
               </h2>
               <div className="mt-10 space-y-6">
                 {[
-                  { step: "1", title: "Export your GummySearch data", desc: "Before December 1, 2026, export your saved searches, subreddit lists, and audience segments from GummySearch." },
-                  { step: "2", title: "Email us your export", desc: "Send your export file (or just a list of your subreddits) to ayucorp1304@gmail.com. We'll set everything up for you." },
-                  { step: "3", title: "Get your first brief", desc: "Within 30 minutes, we'll have your subreddits loaded. Generate your first audience brief and see the difference." },
+                  { step: "1", title: "Export from GummySearch", desc: "You have until December 1, 2026 to pull your saved searches, subreddit lists, and segments out of GummySearch." },
+                  { step: "2", title: "Send it to us", desc: "Email the export (or just a list of subreddits you track) to ayucorp1304@gmail.com. I'll load it in for you." },
+                  { step: "3", title: "Run your first brief", desc: "Your subreddits will be ready in under 30 minutes. Run a brief and compare it to what you were getting before." },
                 ].map((item) => (
                   <div key={item.step} className="flex gap-5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
@@ -267,7 +266,7 @@ export default function GummySearchAlternativePage() {
                 FAQ
               </p>
               <h2 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">
-                Questions about the switch.
+                Questions people ask before switching.
               </h2>
             </div>
             <div className="lg:col-span-3 lg:pl-8">
@@ -291,9 +290,9 @@ export default function GummySearchAlternativePage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="max-w-xl">
             <h2 className="text-3xl font-bold leading-tight sm:text-4xl">
-              Your GummySearch data deletes December 1.
+              Your GummySearch account disappears on December 1.
               <br />
-              Don&apos;t wait.
+              Worth moving before it does.
             </h2>
             <div className="mt-8">
               <Button size="lg" asChild>
@@ -304,8 +303,7 @@ export default function GummySearchAlternativePage() {
               </Button>
             </div>
             <p className="mt-4 text-xs tracking-wide text-muted-foreground">
-              No credit card &middot; Research-only, never posts as you &middot;
-              Built to outlast Reddit API changes
+              No credit card. Research-only access. Free migration for GummySearch users.
             </p>
           </div>
         </div>

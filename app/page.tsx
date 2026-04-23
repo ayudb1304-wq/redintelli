@@ -4,9 +4,33 @@ import { LandingInteractions } from "@/components/landing/landing-interactions";
 import "./landing.css";
 
 export const metadata: Metadata = {
-  title: "RedIntelli - Understand any Reddit audience",
+  title: "RedIntelli | Reddit Audience Research Tool for Founders",
   description:
-    "AI-powered briefs that tell you what a subreddit actually struggles with, desires, and responds to - so your marketing lands instead of getting banned.",
+    "A Reddit audience research tool that reads hundreds of posts for you and hands back a brief: pain points, the phrases people actually use, and what gets upvoted. Free to start, no Reddit API.",
+  keywords: [
+    "reddit audience research tool",
+    "reddit market research",
+    "subreddit finder",
+    "reddit audience intelligence",
+    "gummysearch alternative",
+  ],
+  alternates: {
+    canonical: "https://redintelli.com",
+  },
+  openGraph: {
+    title: "RedIntelli | Reddit Audience Research Tool",
+    description:
+      "Get a full audience brief on any subreddit in about a minute. Pain points, language patterns, content that works, community rules.",
+    url: "https://redintelli.com",
+    siteName: "RedIntelli",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RedIntelli | Reddit Audience Research Tool",
+    description:
+      "Audience briefs on any subreddit in under a minute. Built to replace GummySearch.",
+  },
 };
 
 function LogoSvg({ size = 24 }: { size?: number }) {
@@ -88,9 +112,9 @@ export default function LandingPage() {
               <span className="highlight">in under a minute.</span>
             </h1>
             <p className="lede">
-              AI-powered briefs that tell you what a subreddit actually
-              struggles with, desires, and responds to - so your
-              marketing lands instead of getting banned.
+              Drop in any subreddit. Get a brief on what people there
+              actually struggle with, how they talk, and what they
+              upvote. Post like a regular, not a growth hacker.
             </p>
             <div className="cta-row">
               <Link className="btn btn-dark btn-lg" href="/signup">
@@ -123,7 +147,7 @@ export default function LandingPage() {
                 <div className="intent-bar">
                   <div className="intent-fill" id="intentFill"></div>
                 </div>
-                <div className="mono-sm" id="intentVal">&mdash; / 100</div>
+                <div className="mono-sm" id="intentVal">-- / 100</div>
               </div>
             </div>
             <div className="float-badge reveal">
@@ -151,7 +175,7 @@ export default function LandingPage() {
         <div className="wrap">
           <div className="section-head">
             <div className="eyebrow mono-sm"><span className="dot"></span> Workflow</div>
-            <h2 className="h2">Three steps. One honest answer.</h2>
+            <h2 className="h2">Three steps, start to brief.</h2>
           </div>
 
           <div className="steps">
@@ -159,7 +183,7 @@ export default function LandingPage() {
               <div className="step-num">01</div>
               <div className="step-tag mono-sm">discover</div>
               <h3 className="step-title">Describe your product.</h3>
-              <p className="step-body">Our AI surfaces the subreddits where your audience actually hangs out - ranked by fit and activity.</p>
+              <p className="step-body">We pull up the subreddits where your audience actually hangs out, ranked by fit and how active they are.</p>
               <div className="step-art art-discover" aria-hidden="true">
                 <div className="chip">r/SaaS <span className="score">94</span></div>
                 <div className="chip">r/indiehackers <span className="score">91</span></div>
@@ -171,8 +195,8 @@ export default function LandingPage() {
             <article className="step reveal">
               <div className="step-num">02</div>
               <div className="step-tag mono-sm">understand</div>
-              <h3 className="step-title">Get the brief.</h3>
-              <p className="step-body">Pain points, language, content that works, community rules - synthesized from hundreds of real posts.</p>
+              <h3 className="step-title">Read the brief.</h3>
+              <p className="step-body">Pain points, the language people use, what posts do well, and the sub&apos;s rules. Written from hundreds of real posts, not summarized keywords.</p>
               <div className="step-art art-brief" aria-hidden="true">
                 <div className="brief-line long"></div>
                 <div className="brief-line med"></div>
@@ -191,8 +215,8 @@ export default function LandingPage() {
             <article className="step reveal">
               <div className="step-num">03</div>
               <div className="step-tag mono-sm">monitor</div>
-              <h3 className="step-title">Track high-intent posts.</h3>
-              <p className="step-body">Daily digest of people actively looking for what you build. Reply where it counts.</p>
+              <h3 className="step-title">Watch for buying-intent posts.</h3>
+              <p className="step-body">A daily email of people asking for what you sell. Reply to the three worth replying to.</p>
               <div className="step-art art-monitor" aria-hidden="true">
                 <div className="radar"></div>
                 <div className="radar-ping r1"></div>
@@ -210,7 +234,7 @@ export default function LandingPage() {
           <div className="section-head center">
             <div className="eyebrow mono-sm"><span className="dot"></span> Inside a brief</div>
             <h2 className="h2">A sample brief for <span className="serif-i">r/indiehackers</span>.</h2>
-            <p className="sub">Every brief reads like a memo from a researcher who actually lives in the community.</p>
+            <p className="sub">This is what shows up. It reads like notes from someone who spent a week in the sub, because that&apos;s what the model is doing on your behalf.</p>
           </div>
 
           <div className="brief-doc reveal">
@@ -355,14 +379,14 @@ export default function LandingPage() {
         <div className="wrap">
           <div className="section-head">
             <div className="eyebrow mono-sm"><span className="dot"></span> What&apos;s inside</div>
-            <h2 className="h2">Built for founders who&nbsp;<span className="serif-i">actually ship</span>.</h2>
+            <h2 className="h2">What&apos;s in every&nbsp;<span className="serif-i">brief</span>.</h2>
           </div>
 
           <div className="feature-grid">
             <div className="feat feat-wide reveal">
               <div className="feat-tag mono-sm">pain points</div>
-              <h3 className="feat-h">What your audience is losing sleep over.</h3>
-              <p className="feat-p">Ranked by how often and how intensely the community talks about each one. Not keywords - themes, extracted and summarized.</p>
+              <h3 className="feat-h">What the community keeps coming back to.</h3>
+              <p className="feat-p">Themes, not keywords. Ranked by how often they come up and how heated they get.</p>
               <div className="feat-vis">
                 <div className="pv-row"><span>Finding first 100 users</span><div className="pv-bar"><i data-w="92%" style={{ width: 0 }}></i></div><em className="mono-sm">92</em></div>
                 <div className="pv-row"><span>Marketing without a budget</span><div className="pv-bar"><i data-w="78%" style={{ width: 0 }}></i></div><em className="mono-sm">78</em></div>
@@ -374,7 +398,7 @@ export default function LandingPage() {
             <div className="feat feat-narrow reveal">
               <div className="feat-tag mono-sm">language</div>
               <h3 className="feat-h">Say this, not that.</h3>
-              <p className="feat-p">The exact phrases the community upvotes - and the corporate-speak that gets you flagged.</p>
+              <p className="feat-p">The phrasing the community upvotes, next to the phrasing that gets you called out.</p>
               <div className="feat-vis small">
                 <div className="lang-pair"><span className="yes">&ldquo;Roast my landing page.&rdquo;</span><span className="no">&ldquo;Seeking constructive feedback.&rdquo;</span></div>
                 <div className="lang-pair"><span className="yes">&ldquo;Here&rsquo;s what didn&rsquo;t work.&rdquo;</span><span className="no">&ldquo;Key learnings from our journey.&rdquo;</span></div>
@@ -383,8 +407,8 @@ export default function LandingPage() {
 
             <div className="feat feat-narrow reveal">
               <div className="feat-tag mono-sm">content</div>
-              <h3 className="feat-h">What the upvote button loves.</h3>
-              <p className="feat-p">Format, length, tone, hook. The anatomy of posts that break 100+ upvotes in this specific sub.</p>
+              <h3 className="feat-h">What posts actually take off here.</h3>
+              <p className="feat-p">Format, length, tone, hook. Based on posts that crossed 100+ upvotes in this sub specifically.</p>
               <div className="feat-vis small">
                 <div className="mini-post">
                   <div className="mp-meta mono-sm">u/you &middot; 2h &middot; r/indiehackers</div>
@@ -396,8 +420,8 @@ export default function LandingPage() {
 
             <div className="feat feat-wide reveal">
               <div className="feat-tag mono-sm">monitoring</div>
-              <h3 className="feat-h">High-intent posts, delivered daily.</h3>
-              <p className="feat-p">We watch your chosen subreddits 24/7 and score every new post for intent. You get a five-minute digest at 8am.</p>
+              <h3 className="feat-h">A daily digest of the posts worth replying to.</h3>
+              <p className="feat-p">We watch your subreddits, score every new post for buying intent, and email you the top ones at 8am. Five minutes, done.</p>
               <div className="feat-vis">
                 <div className="digest">
                   <div className="digest-head mono-sm">tuesday digest &middot; 7 high-intent posts</div>
@@ -416,8 +440,8 @@ export default function LandingPage() {
         <div className="wrap">
           <div className="section-head">
             <div className="eyebrow mono-sm"><span className="dot"></span> The GummySearch alternative</div>
-            <h2 className="h2">Built from scratch after&nbsp;<span className="serif-i">GummySearch shut down</span>.</h2>
-            <p className="sub">Same research, calmer interface, modern AI. Here&apos;s what changed.</p>
+            <h2 className="h2">Built after&nbsp;<span className="serif-i">GummySearch shut down</span>.</h2>
+            <p className="sub">Same kind of research, different data source, faster output. Here&apos;s how it stacks up.</p>
           </div>
 
           <div className="compare-table reveal">
@@ -432,26 +456,26 @@ export default function LandingPage() {
             <div className="ct-row">
               <div className="ct-label">AI-synthesized briefs</div>
               <div className="ct-cell ours"><span className="y">&#10003;</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
             </div>
             <div className="ct-row">
               <div className="ct-label">Pain point intensity ranking</div>
               <div className="ct-cell ours"><span className="y">&#10003;</span></div>
-              <div className="ct-cell"><span className="partial">partial</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
+              <div className="ct-cell"><span className="partial">Partial</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
             </div>
             <div className="ct-row">
               <div className="ct-label">Say-this-not-that language</div>
               <div className="ct-cell ours"><span className="y">&#10003;</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
             </div>
             <div className="ct-row">
               <div className="ct-label">Intent-scored daily digest</div>
               <div className="ct-cell ours"><span className="y">&#10003;</span></div>
               <div className="ct-cell"><span className="y">&#10003;</span></div>
-              <div className="ct-cell"><span className="x">&mdash;</span></div>
+              <div className="ct-cell"><span className="x">No</span></div>
             </div>
             <div className="ct-row">
               <div className="ct-label">Time to actionable insight</div>
@@ -461,9 +485,9 @@ export default function LandingPage() {
             </div>
             <div className="ct-row">
               <div className="ct-label">Monthly cost (indie plan)</div>
-              <div className="ct-cell ours"><b>$19</b></div>
+              <div className="ct-cell ours"><b>$29</b></div>
               <div className="ct-cell">$49</div>
-              <div className="ct-cell">&mdash;</div>
+              <div className="ct-cell">n/a</div>
             </div>
           </div>
         </div>
@@ -474,7 +498,7 @@ export default function LandingPage() {
         <div className="wrap">
           <div className="section-head">
             <div className="eyebrow mono-sm"><span className="dot"></span> What founders are saying</div>
-            <h2 className="h2">Quiet confidence, loud&nbsp;<span className="serif-i">conversions</span>.</h2>
+            <h2 className="h2">What founders are&nbsp;<span className="serif-i">actually saying</span>.</h2>
           </div>
 
           <div className="quote-grid">
@@ -510,7 +534,7 @@ export default function LandingPage() {
         <div className="wrap faq-wrap">
           <div className="faq-left">
             <div className="eyebrow mono-sm"><span className="dot"></span> FAQ</div>
-            <h2 className="h2">Questions, <span className="serif-i">honestly answered</span>.</h2>
+            <h2 className="h2">The questions people ask <span className="serif-i">before signing up</span>.</h2>
             <p className="sub">Can&apos;t find it? <Link className="link-u" href="mailto:ayucorp1304@gmail.com">Email the founder directly.</Link></p>
           </div>
           <div className="faq-list">
@@ -554,7 +578,7 @@ export default function LandingPage() {
                 <div className="pc-name">Starter</div>
                 <div className="pc-sub">For a serious side project.</div>
               </div>
-              <div className="pc-price"><span className="currency">$</span>19<span className="per">/mo</span></div>
+              <div className="pc-price"><span className="currency">$</span>29<span className="per">/mo</span></div>
               <ul className="pc-list">
                 <li>10 briefs / month</li>
                 <li>10 tracked subreddits</li>
@@ -570,7 +594,7 @@ export default function LandingPage() {
                 <div className="pc-name">Pro</div>
                 <div className="pc-sub">For full-time operators.</div>
               </div>
-              <div className="pc-price"><span className="currency">$</span>49<span className="per">/mo</span></div>
+              <div className="pc-price"><span className="currency">$</span>59<span className="per">/mo</span></div>
               <ul className="pc-list">
                 <li>Unlimited briefs</li>
                 <li>50 tracked subreddits</li>
@@ -587,8 +611,8 @@ export default function LandingPage() {
       {/* ===== FINAL CTA ===== */}
       <section className="section final-cta">
         <div className="wrap fc-inner">
-          <h2 className="fc-h">Stop guessing. <span className="serif-i">Start understanding.</span></h2>
-          <p className="fc-p">Your first brief takes less time than a coffee. It&apos;s also free.</p>
+          <h2 className="fc-h">Two briefs, free. <span className="serif-i">No card.</span></h2>
+          <p className="fc-p">Your first brief takes about as long as making coffee.</p>
           <div className="cta-row center">
             <Link className="btn btn-dark btn-lg" href="/signup">
               Generate your first brief <span className="arrow">&rarr;</span>
@@ -672,8 +696,8 @@ export default function LandingPage() {
             browserRequirements: "Requires a modern web browser",
             offers: [
               { "@type": "Offer", price: "0", priceCurrency: "USD", name: "Free" },
-              { "@type": "Offer", price: "19", priceCurrency: "USD", name: "Starter", priceValidUntil: "2027-12-31" },
-              { "@type": "Offer", price: "49", priceCurrency: "USD", name: "Pro", priceValidUntil: "2027-12-31" },
+              { "@type": "Offer", price: "29", priceCurrency: "USD", name: "Starter", priceValidUntil: "2027-12-31" },
+              { "@type": "Offer", price: "59", priceCurrency: "USD", name: "Pro", priceValidUntil: "2027-12-31" },
             ],
           }),
         }}
